@@ -28,8 +28,8 @@ public class FrontendController {
     System.getenv("GUESTBOOK_API_ADDR")
   );
 
-  private String loginUri = String.format(
-    "http://%s/login",
+  private String queryUri = String.format(
+    "http://%s/query",
     System.getenv("GUESTBOOK_API_ADDR")
   );
 
@@ -62,7 +62,7 @@ public class FrontendController {
   )
     throws URISyntaxException {
     URI uri = new URI(
-      String.format("%s?username=%s&password=%s", loginUri, username, password)
+      String.format("%s?username=%s&password=%s", queryUri, username, password)
     );
     RestTemplate restTemplate = new RestTemplate();
     GuestBookEntry[] response = restTemplate.getForObject(
@@ -102,8 +102,8 @@ public class FrontendController {
    * @return redirects back to home page
    * @throws URISyntaxException when there is an issue with the backend uri
    */
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public final String login(final GuestBookEntry formMessage)
+  @RequestMapping(value = "/query", method = RequestMethod.POST)
+  public final String query(final GuestBookEntry formMessage)
     throws URISyntaxException {
     URI url = new URI(signupUri);
 

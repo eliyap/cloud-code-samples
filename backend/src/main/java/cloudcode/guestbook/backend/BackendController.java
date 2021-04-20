@@ -33,8 +33,8 @@ public class BackendController {
    * endpoint for retrieving all guest book entries stored in database
    * @return a list of GuestBookEntry objects
    */
-  @GetMapping("/login")
-  public final List<GuestBookEntry> login(
+  @GetMapping("/query")
+  public final List<GuestBookEntry> query(
     @RequestParam("username") String username,
     @RequestParam("password") String password
   ) {
