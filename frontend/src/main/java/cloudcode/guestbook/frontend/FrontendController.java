@@ -54,6 +54,16 @@ public class FrontendController {
    * @param model defines model for html template
    * @return the name of the html template to render
    */
+  @GetMapping("/login")
+  public final String login(final Model model) {
+    return "login";
+  }
+
+  /**
+   * endpoint for the landing page
+   * @param model defines model for html template
+   * @return the name of the html template to render
+   */
   @GetMapping("/test")
   public final String test(
     final Model model,
