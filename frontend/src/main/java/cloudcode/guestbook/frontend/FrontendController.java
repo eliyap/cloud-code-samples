@@ -7,8 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
@@ -89,7 +88,7 @@ public class FrontendController {
    * @return redirects back to home page
    * @throws URISyntaxException when there is an issue with the backend uri
    */
-  @RequestMapping(value = "/signup", method = RequestMethod.POST)
+  @PostMapping("/signup")
   public final String post(final GuestBookEntry formMessage)
     throws URISyntaxException {
     URI url = new URI(signupUri);
@@ -112,7 +111,7 @@ public class FrontendController {
    * @return redirects back to home page
    * @throws URISyntaxException when there is an issue with the backend uri
    */
-  @RequestMapping(value = "/query", method = RequestMethod.POST)
+  @PostMapping("/query")
   public final String query(final GuestBookEntry formMessage)
     throws URISyntaxException {
     URI url = new URI(signupUri);
