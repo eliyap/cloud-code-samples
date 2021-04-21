@@ -3,6 +3,9 @@ package cloudcode.guestbook.backend;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +34,19 @@ public class BackendController {
   }
 
   @PostMapping("/login")
-  public void login(@RequestBody User user){
-      // TODO: fix
-      System.out.print(user.getUsername());
-      System.out.print(user.getPassword());
-    User match = repository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+  public final UserResponse login(@RequestBody User user) {
+    User userByName = repository.findByUsername(user.getUsername());
+    User match = repository.findByUsernameAndPassword(
+      user.getUsername(),
+      user.getPassword()
+    );
+    if (userByName == null) {
+      return new UserResponse(false, "No Account with Username");
+    } else if (match == null) {
+      return new UserResponse(false, "Incorrect Password");
+    } else {
+      return new UserResponse(true, null);
+    }
   }
 
   /**
@@ -51,15 +62,12 @@ public class BackendController {
   private CustomUserDetailsService userService;
 
   @PostMapping("/signup")
-  public final SignupResponse addUser(@RequestBody User user) {
+  public final UserResponse addUser(@RequestBody User user) {
     if (userService.findUserByEmail(user.getEmail()) != null) {
-      return new SignupResponse(
-        false,
-        "There is already a user registered with that email"
-      );
+      return new UserResponse(false, "Email already registered");
     } else {
       repository.save(user);
-      return new SignupResponse(true, null);
+      return new UserResponse(true, null);
     }
   }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,18 +33,22 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     throws AuthenticationException {
     String username = authentication.getPrincipal().toString();
     String password = authentication.getCredentials().toString();
+    URI url;
+
     try {
-      new RestTemplate()
-      .postForObject(
-          new URI(loginUri),
-          new HttpEntity<User>(new User("", username, password)),
-          SignupResponse.class
-        );
+      url = new URI(loginUri);
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new AuthenticationServiceException(
+        "Could not construct backend URL!"
+      );
     }
-    //TODO: call backend
+
+    UserResponse result = new RestTemplate()
+    .postForObject(
+        url,
+        new HttpEntity<User>(new User("", username, password)),
+        UserResponse.class
+      );
     return new UsernamePasswordAuthenticationToken(username, password);
   }
 
