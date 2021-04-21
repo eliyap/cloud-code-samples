@@ -14,12 +14,18 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand mr-auto" href="#">SalStocks</a>
+    <a class="nav-link active" href="/">Home/Search</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Favorites</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Portfolio</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Logout</a>
+    <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
+  </nav>
   <div class="header">
     <div class="container">
       <h1>
-        <a href="/">
-          Welcome!
-        </a>
+        <a href="/">Welcome!</a>
       </h1>
       <a href="#" class="text-muted">View on GitHub</a>
     </div>
