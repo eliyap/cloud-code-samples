@@ -16,15 +16,21 @@ public class User {
     dropDups = true
   )
   private String email;
-  
+
   @Indexed(
     unique = true,
     direction = IndexDirection.DESCENDING,
     dropDups = true
   )
   private String username;
+
   private String password;
-  private long date;
+
+  public User(String email, String username, String password) {
+    this.email = email;
+    this.username = username;
+    this.password = password;
+  }
 
   public final String getEmail() {
     return email;
@@ -48,13 +54,5 @@ public class User {
 
   public final void setPassword(String password) {
     this.password = password;
-  }
-
-  public final long getDate() {
-    return this.date;
-  }
-
-  public final void setDate(long date) {
-    this.date = date;
   }
 }
