@@ -8,6 +8,8 @@
   <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 
@@ -27,20 +29,15 @@
     <div class="row">
       <div class="col-md-6">
         <form method="GET" th:action="@{/test}" th:object="${formmessage}">
-          <label class="sr-only" for="email">Email</label>
-          <div class="mb-2 mr-sm-2">
-            <div>Email</div>
-            <input type="email" class="form-control" id="email" name="email" required>
-          </div>
           <label class="sr-only" for="username">Username</label>
           <div class="mb-2 mr-sm-2">
             <div>Username</div>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <input type="text" class="form-control" id="login-username" name="username" required>
           </div>
           <label class="sr-only" for="username">Password</label>
           <div class="mb-2 mr-sm-2">
             <div>Password</div>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="login-password" name="password" required>
           </div>
           <button type="submit" class="btn btn-primary mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="icn">
@@ -53,21 +50,21 @@
         </form>
       </div>
       <div class="col-md-6">
-        <form method="POST" th:action="@{/signup}" th:object="${formmessage}">
+        <form method="POST" id="signup-form" th:action="@{/signup}" th:object="${formmessage}">
           <label class="sr-only" for="email">Email</label>
           <div class="mb-2 mr-sm-2">
             <div>Email</div>
-            <input type="email" class="form-control" id="email" name="email" required>
+            <input type="email" class="form-control" id="signup-email" name="email" required>
           </div>
           <label class="sr-only" for="username">Username</label>
           <div class="mb-2 mr-sm-2">
             <div>Username</div>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <input type="text" class="form-control" id="signup-username" name="username" required>
           </div>
           <label class="sr-only" for="username">Password</label>
           <div class="mb-2 mr-sm-2">
             <div>Password</div>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="signup-password" name="password" required>
           </div>
           <button type="submit" class="btn btn-primary mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="icn">
@@ -96,6 +93,9 @@
       No messages are logged to the guestbook yet.
     </div>
   </div>
+  <script>
+
+  </script>
 </body>
 
 </html>

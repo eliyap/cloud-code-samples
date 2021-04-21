@@ -85,7 +85,7 @@ public class FrontendController {
    * @throws URISyntaxException when there is an issue with the backend uri
    */
   @RequestMapping(value = "/signup", method = RequestMethod.POST)
-  public final String post(final User formMessage)
+  public final String post(final Model model, final User formMessage)
     throws URISyntaxException {
     URI url = new URI(signupUri);
 
@@ -96,7 +96,7 @@ public class FrontendController {
       httpHeaders
     );
     RestTemplate restTemplate = new RestTemplate();
-    restTemplate.postForObject(url, httpEntity, String.class);
+    SignupResponse response = restTemplate.postForObject(url, httpEntity, SignupResponse.class);
 
     return "redirect:/";
   }

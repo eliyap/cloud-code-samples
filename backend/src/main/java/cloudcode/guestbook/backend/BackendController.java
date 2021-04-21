@@ -3,6 +3,7 @@ package cloudcode.guestbook.backend;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,9 +56,20 @@ public class BackendController {
     repository.save(message);
   }
 
+  @Autowired
+  private CustomUserDetailsService userService;
+
   @PostMapping("/signup")
-  public final void addUser(@RequestBody User message) {
-    message.setDate(System.currentTimeMillis());
-    repository.save(message);
+  public final SignupResponse addUser(@RequestBody User user) {
+    if (userService.findUserByEmail(user.getEmail()) != null) {
+      return new SignupResponse(
+        false,
+        "There is already a user registered with that email"
+      );
+    } else {
+      user.setDate(System.currentTimeMillis());
+      repository.save(user);
+      return new SignupResponse(true, null);
+    }
   }
 }
