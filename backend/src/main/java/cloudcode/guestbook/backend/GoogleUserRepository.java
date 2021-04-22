@@ -3,8 +3,9 @@ package cloudcode.guestbook.backend;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
- * represents a custom Mongo repository that stores User objects
+ * represents a custom Mongo repository that stores Google User objects
  */
-public interface GoogleUserRepository extends MongoRepository<User, String> {
-  User findByEmail(String email);
+public interface GoogleUserRepository
+  extends MongoRepository<GoogleUser, String> {
+  GoogleUser findByEmail(String email);
 }

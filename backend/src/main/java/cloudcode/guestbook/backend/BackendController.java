@@ -18,7 +18,7 @@ public class BackendController {
   private UserRepository userRepository;
   
   @Autowired
-  private UserRepository googleUserRepository;
+  private GoogleUserRepository googleUserRepository;
 
   /**
    * endpoint for retrieving all guest book entries stored in database
@@ -67,5 +67,11 @@ public class BackendController {
         userRepository.save(user);
       return new UserResponse(true, null);
     }
+}
+
+@PostMapping("/googlesignup")
+  public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
+      googleUserRepository.save(googleUser);
+      return new UserResponse(true, null);
   }
 }

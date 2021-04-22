@@ -13,4 +13,14 @@ public class GoogleUser {
     dropDups = true
   )
   private String email;
+
+  public GoogleUser() {}
+
+  public final String getEmail() {
+    return email;
+  }
+
+  public final void setEmail(String email) {
+    this.email = email;
+  }
 }
