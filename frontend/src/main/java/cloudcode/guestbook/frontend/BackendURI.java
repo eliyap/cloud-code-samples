@@ -11,6 +11,11 @@ public class BackendURI {
     "http://%s/signup",
     System.getenv("GUESTBOOK_API_ADDR")
   );
+  
+  public static String GOOGLE = String.format(
+    "http://%s/googlesignin",
+    System.getenv("GUESTBOOK_API_ADDR")
+  );
 
   public static String LOGIN = String.format(
     "http://%s/login",

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -87,13 +86,17 @@ public class FrontendController {
     value = "/googlesignin",
     consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
   )
-  public final String tokensignin(final User user) {
-    // DEBUG
-    System.out.println(user == null);
-    System.out.println(user);
-    System.out.println(user.getPassword());
-    System.out.println(user.getEmail());
-    System.out.println(user.getUsername());
+  public final String tokensignin(final GoogleUser googleUser)
+    throws URISyntaxException {
+    System.out.println(googleUser.getEmail());
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.set("Content-Type", "application/json");
+    UserResponse response = new RestTemplate()
+    .postForObject(
+        new URI(BackendURI.GOOGLE),
+        new HttpEntity<GoogleUser>(googleUser, httpHeaders),
+        UserResponse.class
+      );
     return "home";
   }
 
