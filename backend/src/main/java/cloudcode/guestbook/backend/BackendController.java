@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BackendController {
 
   @Autowired
-  private UserRepository repository;
+  private UserRepository userRepository;
+  
+  @Autowired
+  private UserRepository googleUserRepository;
 
   /**
    * endpoint for retrieving all guest book entries stored in database
@@ -24,14 +27,14 @@ public class BackendController {
   @GetMapping("/messages")
   public final List<User> getMessages() {
     Sort byCreation = new Sort(Sort.Direction.DESC, "_id");
-    List<User> msgList = repository.findAll(byCreation);
+    List<User> msgList = userRepository.findAll(byCreation);
     return msgList;
   }
 
   @PostMapping("/login")
   public final UserResponse login(@RequestBody User user) {
-    User userByName = repository.findByUsername(user.getUsername());
-    User match = repository.findByUsernameAndPassword(
+    User userByName = userRepository.findByUsername(user.getUsername());
+    User match = userRepository.findByUsernameAndPassword(
       user.getUsername(),
       user.getPassword()
     );
@@ -54,7 +57,7 @@ public class BackendController {
    */
   @PostMapping("/messages")
   public final void addMessage(@RequestBody User user) {
-    repository.save(user);
+    userRepository.save(user);
   }
 
   @Autowired
@@ -70,7 +73,7 @@ public class BackendController {
     } else if (usernameExists) {
       return new UserResponse(false, "Username already registered");
     } else {
-      repository.save(user);
+        userRepository.save(user);
       return new UserResponse(true, null);
     }
   }
