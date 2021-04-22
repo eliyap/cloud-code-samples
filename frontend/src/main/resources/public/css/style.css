@@ -118,6 +118,14 @@ button.fw-btn {
     width: 100%;
 }
 
+.error-message {
+    color: red;
+}
+
+.abcRioButton {
+    width: auto !important;
+}
+
 @media (min-width: 1200px) {
   .container {
     max-width: 900px;

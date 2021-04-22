@@ -2,15 +2,28 @@ package cloudcode.guestbook.frontend;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * defines the REST endpoints managed by the server.
@@ -46,6 +59,10 @@ public class FrontendController {
     return "home";
   }
 
+  /**
+   * endpoint for the login page
+   * @return the name of the html template to render
+   */
   @GetMapping("/login")
   public final String login() {
     return "login";
@@ -74,28 +91,65 @@ public class FrontendController {
 
   /**
    * endpoint for handling form submission
-   * @param formMessage holds date entered in html form
+   * @param User holds date entered in html form
    * @return redirects back to home page
    * @throws URISyntaxException when there is an issue with the backend uri
    */
-  @RequestMapping(value = "/signup", method = RequestMethod.POST)
-  public final String post(final Model model, final User formMessage)
+  @PostMapping("/signup")
+  public RedirectView post(final User user, RedirectAttributes attributes)
     throws URISyntaxException {
-    URI url = new URI(signupUri);
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
-    HttpEntity<User> httpEntity = new HttpEntity<User>(
-      formMessage,
-      httpHeaders
-    );
-    RestTemplate restTemplate = new RestTemplate();
-    UserResponse response = restTemplate.postForObject(
-      url,
-      httpEntity,
-      UserResponse.class
-    );
+    UserResponse response = new RestTemplate()
+    .postForObject(
+        new URI(signupUri),
+        new HttpEntity<User>(user, httpHeaders),
+        UserResponse.class
+      );
 
-    return "redirect:/";
+    RedirectView view = new RedirectView("/login");
+    if (response.success) {
+      //TODO: sign in user here...
+
+      attributes.addFlashAttribute("username", user.getUsername());
+      attributes.addFlashAttribute("password", user.getPassword());
+      attributes.addFlashAttribute("autologin", "autologin");
+    } else {
+      attributes.addFlashAttribute(
+        "errorMessage",
+        "Error: " + response.errorMessage
+      );
+    }
+    return view;
   }
+
+  @GetMapping("/login-error")
+  public String login(HttpServletRequest request, Model model) {
+    HttpSession session = request.getSession(false);
+    String errorMessage = null;
+    if (session != null) {
+      AuthenticationException ex = (AuthenticationException) session.getAttribute(
+        WebAttributes.AUTHENTICATION_EXCEPTION
+      );
+      if (ex != null) {
+        errorMessage = ex.getMessage();
+      }
+    }
+    model.addAttribute("errorMessage", errorMessage);
+    return "login";
+  }
+
+  @PostMapping("/tokensignin")
+  public final String tokensignin(@RequestBody final User user) {
+    // DEBUG
+    System.out.println(user == null);
+    System.out.println(user);
+    System.out.println(user.getPassword());
+    System.out.println(user.getEmail());
+    System.out.println(user.getUsername());
+    return "home";
+  }
+
+  @Autowired
+  protected AuthenticationManager authenticationManager;
 }

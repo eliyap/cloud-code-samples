@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,13 +21,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     "http://%s/login",
     System.getenv("GUESTBOOK_API_ADDR")
   );
-
-  private static List<User> users = new ArrayList<User>();
-
-  public CustomAuthenticationProvider() {
-    // Example User
-    users.add(new User("fake@email.com", "user1", "user1Pass"));
-  }
 
   @Override
   public Authentication authenticate(Authentication authentication)
@@ -49,7 +43,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         new HttpEntity<User>(new User("", username, password)),
         UserResponse.class
       );
-    return new UsernamePasswordAuthenticationToken(username, password);
+    if (result.success) {
+      return new UsernamePasswordAuthenticationToken(username, password);
+    } else {
+      throw new BadCredentialsException(result.errorMessage);
+    }
   }
 
   @Override
