@@ -16,7 +16,7 @@ public class BackendController {
 
   @Autowired
   private UserRepository userRepository;
-  
+
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
@@ -40,7 +40,9 @@ public class BackendController {
     );
 
     // DEBUG
-    System.out.println("Username: " + user.getUsername() + ", Password: " + user.getPassword());
+    System.out.println(
+      "Username: " + user.getUsername() + ", Password: " + user.getPassword()
+    );
 
     if (userByName == null) {
       return new UserResponse(false, "No Account with Username");
@@ -64,14 +66,14 @@ public class BackendController {
     } else if (usernameExists) {
       return new UserResponse(false, "Username already registered");
     } else {
-        userRepository.save(user);
+      userRepository.save(user);
       return new UserResponse(true, null);
     }
-}
+  }
 
-@PostMapping("/googlesignin")
+  @PostMapping("/googlesignin")
   public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
-      googleUserRepository.save(googleUser);
-      return new UserResponse(true, null);
+    googleUserRepository.save(googleUser);
+    return new UserResponse(true, null);
   }
 }
