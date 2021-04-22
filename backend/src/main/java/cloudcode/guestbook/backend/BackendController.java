@@ -51,15 +51,6 @@ public class BackendController {
     }
   }
 
-  /**
-   * endpoint for adding a new guest book entry to the database
-   * @param message a message object passed in the HTTP POST request
-   */
-  @PostMapping("/messages")
-  public final void addMessage(@RequestBody User user) {
-    userRepository.save(user);
-  }
-
   @Autowired
   private CustomUserDetailsService userService;
 
