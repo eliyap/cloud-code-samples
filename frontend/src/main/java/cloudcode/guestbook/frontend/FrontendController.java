@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
@@ -82,8 +83,11 @@ public class FrontendController {
     return "login";
   }
 
-  @PostMapping("/tokensignin")
-  public final String tokensignin(@RequestBody final User user) {
+  @PostMapping(
+    value = "/googlesignin",
+    consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+  )
+  public final String tokensignin(final User user) {
     // DEBUG
     System.out.println(user == null);
     System.out.println(user);
