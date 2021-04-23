@@ -7,14 +7,18 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,6 +28,9 @@ import org.springframework.web.servlet.view.RedirectView;
  */
 @Controller
 public class FrontendController {
+
+  @Autowired
+  protected AuthenticationManager authenticationManager;
 
   /**
    * endpoint for the login page
@@ -41,7 +48,11 @@ public class FrontendController {
    * @throws URISyntaxException when there is an issue with the backend uri
    */
   @PostMapping("/signup")
-  public RedirectView post(final User user, RedirectAttributes attributes)
+  public RedirectView post(
+    final User user,
+    RedirectAttributes attributes,
+    HttpServletRequest request
+  )
     throws URISyntaxException {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
@@ -52,18 +63,16 @@ public class FrontendController {
         UserResponse.class
       );
 
-    RedirectView view = new RedirectView("/login");
     if (response.success) {
-      attributes.addFlashAttribute("username", user.getUsername());
-      attributes.addFlashAttribute("password", user.getPassword());
-      attributes.addFlashAttribute("autologin", "autologin");
+      login(request, user.getUsername(), user.getPassword());
+      return new RedirectView("/");
     } else {
       attributes.addFlashAttribute(
         "errorMessage",
         "Error: " + response.errorMessage
       );
+      return new RedirectView("/login");
     }
-    return view;
   }
 
   @GetMapping("/login-error")
@@ -82,17 +91,47 @@ public class FrontendController {
     return "login";
   }
 
-  @PostMapping("/tokensignin")
-  public final String tokensignin(@RequestBody final User user) {
-    // DEBUG
-    System.out.println(user == null);
-    System.out.println(user);
-    System.out.println(user.getPassword());
-    System.out.println(user.getEmail());
-    System.out.println(user.getUsername());
-    return "home";
+  @PostMapping(
+    value = "/googlesignin",
+    consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+  )
+  public final String tokensignin(
+    final GoogleUser googleUser,
+    HttpServletRequest request
+  )
+    throws URISyntaxException {
+    System.out.println(googleUser.getEmail());
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.set("Content-Type", "application/json");
+    UserResponse response = new RestTemplate()
+    .postForObject(
+        new URI(BackendURI.GOOGLE),
+        new HttpEntity<GoogleUser>(googleUser, httpHeaders),
+        UserResponse.class
+      );
+
+    // try manual auth
+    login(request, "foo", "bar");
+
+    return "redirect:/";
   }
 
-  @Autowired
-  protected AuthenticationManager authenticationManager;
+  // Manually log the User in.
+  // Source: https://stackoverflow.com/a/8336233/12395667
+  public void login(
+    HttpServletRequest request,
+    String userName,
+    String password
+  ) {
+    // Authenticate the user
+    Authentication authentication = authenticationManager.authenticate(
+      new UsernamePasswordAuthenticationToken(userName, password)
+    );
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    securityContext.setAuthentication(authentication);
+
+    // Create a new session and add the security context.
+    HttpSession session = request.getSession(true);
+    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+  }
 }

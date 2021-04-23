@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BackendController {
 
   @Autowired
-  private UserRepository repository;
+  private UserRepository userRepository;
+
+  @Autowired
+  private GoogleUserRepository googleUserRepository;
 
   /**
    * endpoint for retrieving all guest book entries stored in database
@@ -24,20 +27,22 @@ public class BackendController {
   @GetMapping("/messages")
   public final List<User> getMessages() {
     Sort byCreation = new Sort(Sort.Direction.DESC, "_id");
-    List<User> msgList = repository.findAll(byCreation);
+    List<User> msgList = userRepository.findAll(byCreation);
     return msgList;
   }
 
   @PostMapping("/login")
   public final UserResponse login(@RequestBody User user) {
-    User userByName = repository.findByUsername(user.getUsername());
-    User match = repository.findByUsernameAndPassword(
+    User userByName = userRepository.findByUsername(user.getUsername());
+    User match = userRepository.findByUsernameAndPassword(
       user.getUsername(),
       user.getPassword()
     );
 
     // DEBUG
-    System.out.println("Username: " + user.getUsername() + ", Password: " + user.getPassword());
+    System.out.println(
+      "Username: " + user.getUsername() + ", Password: " + user.getPassword()
+    );
 
     if (userByName == null) {
       return new UserResponse(false, "No Account with Username");
@@ -46,15 +51,6 @@ public class BackendController {
     } else {
       return new UserResponse(true, null);
     }
-  }
-
-  /**
-   * endpoint for adding a new guest book entry to the database
-   * @param message a message object passed in the HTTP POST request
-   */
-  @PostMapping("/messages")
-  public final void addMessage(@RequestBody User user) {
-    repository.save(user);
   }
 
   @Autowired
@@ -70,8 +66,14 @@ public class BackendController {
     } else if (usernameExists) {
       return new UserResponse(false, "Username already registered");
     } else {
-      repository.save(user);
+      userRepository.save(user);
       return new UserResponse(true, null);
     }
+  }
+
+  @PostMapping("/googlesignin")
+  public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
+    // googleUserRepository.save(googleUser);
+    return new UserResponse(true, null);
   }
 }

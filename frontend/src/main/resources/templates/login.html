@@ -14,17 +14,23 @@
   <script>
     function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', `${location.origin}/tokensignin`);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function () {
-        console.log('Signed in as: ' + xhr.responseText);
-      };
-      xhr.send(JSON.stringify({
-        "username": profile.getName(),
+
+      const payload = {
         "email": profile.getEmail(),
         "password": googleUser.getAuthResponse().id_token
-      }));
+      };
+      var form = document.createElement('form');
+      form.style.visibility = 'hidden'; // no user interaction is necessary
+      form.method = 'POST'; // forms by default use GET query strings
+      form.action = `${location.origin}/googlesignin`;
+      for (key in payload) {
+        var input = document.createElement('input');
+        input.name = key;
+        input.value = payload[key];
+        form.appendChild(input); // add key/value pair to form
+      }
+      document.body.appendChild(form); // forms cannot be submitted outside of body
+      // form.submit(); // send the payload and navigate
     }
   </script>
   <script th:if="${param.logout}" defer>

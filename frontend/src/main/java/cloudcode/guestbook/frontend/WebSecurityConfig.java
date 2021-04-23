@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     web.ignoring()
       .antMatchers(HttpMethod.POST, "/signup")
-      .antMatchers(HttpMethod.POST, "/tokensignin");
+      .antMatchers(HttpMethod.POST, "/googlesignin");
   }
 
   @Override
@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Autowired
-  private CustomAuthenticationProvider authProvider;
+  private UserAuthenticationProvider authProvider;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
