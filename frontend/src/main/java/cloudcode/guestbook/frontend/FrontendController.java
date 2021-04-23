@@ -72,27 +72,6 @@ public class FrontendController {
       );
       return new RedirectView("/login");
     }
-    // return autoLoginRedirect(user, attributes, response);
-  }
-
-  // Creates a model to have the user automatically "log in"
-  private RedirectView autoLoginRedirect(
-    final User user,
-    RedirectAttributes attributes,
-    UserResponse response
-  ) {
-    RedirectView view = new RedirectView("/login");
-    if (response.success) {
-      attributes.addFlashAttribute("username", user.getUsername());
-      attributes.addFlashAttribute("password", user.getPassword());
-      attributes.addFlashAttribute("autologin", "autologin");
-    } else {
-      attributes.addFlashAttribute(
-        "errorMessage",
-        "Error: " + response.errorMessage
-      );
-    }
-    return view;
   }
 
   @GetMapping("/login-error")
