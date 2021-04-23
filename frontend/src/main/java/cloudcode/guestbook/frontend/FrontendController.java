@@ -9,10 +9,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +47,11 @@ public class FrontendController {
    * @throws URISyntaxException when there is an issue with the backend uri
    */
   @PostMapping("/signup")
-  public RedirectView post(final User user, RedirectAttributes attributes)
+  public RedirectView post(
+    final User user,
+    RedirectAttributes attributes,
+    HttpServletRequest request
+  )
     throws URISyntaxException {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
@@ -53,7 +61,18 @@ public class FrontendController {
         new HttpEntity<User>(user, httpHeaders),
         UserResponse.class
       );
-    return autoLoginRedirect(user, attributes, response);
+
+    if (response.success) {
+      login(request, user.getUsername(), user.getPassword());
+      return new RedirectView("/");
+    } else {
+      attributes.addFlashAttribute(
+        "errorMessage",
+        "Error: " + response.errorMessage
+      );
+      return new RedirectView("/login");
+    }
+    // return autoLoginRedirect(user, attributes, response);
   }
 
   // Creates a model to have the user automatically "log in"
@@ -96,7 +115,10 @@ public class FrontendController {
     value = "/googlesignin",
     consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
   )
-  public final String tokensignin(final GoogleUser googleUser)
+  public final String tokensignin(
+    final GoogleUser googleUser,
+    HttpServletRequest request
+  )
     throws URISyntaxException {
     System.out.println(googleUser.getEmail());
     HttpHeaders httpHeaders = new HttpHeaders();
@@ -109,12 +131,35 @@ public class FrontendController {
       );
 
     // try manual auth
-    SecurityContextHolder
-      .getContext()
-      .setAuthentication(new UsernamePasswordAuthenticationToken("foo", "bar"));
+    login(request, "foo", "bar");
 
     return "redirect:/";
   }
+
+  public void login(
+    HttpServletRequest request,
+    String userName,
+    String password
+  ) {
+    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
+      userName,
+      password
+    );
+
+    // Authenticate the user
+    Authentication authentication = authenticationManager.authenticate(
+      authRequest
+    );
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    securityContext.setAuthentication(authentication);
+
+    // Create a new session and add the security context.
+    HttpSession session = request.getSession(true);
+    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+  }
+
+  @Autowired
+  protected AuthenticationProvider authenticationProvider;
 
   @Autowired
   protected AuthenticationManager authenticationManager;
