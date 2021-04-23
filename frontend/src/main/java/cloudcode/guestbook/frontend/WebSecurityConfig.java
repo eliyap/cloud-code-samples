@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Autowired
-  private CustomAuthenticationProvider authProvider;
+  private UserAuthenticationProvider authProvider;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
