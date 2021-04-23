@@ -20,17 +20,6 @@ public class BackendController {
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
-  /**
-   * endpoint for retrieving all guest book entries stored in database
-   * @return a list of User objects
-   */
-  @GetMapping("/messages")
-  public final List<User> getMessages() {
-    Sort byCreation = new Sort(Sort.Direction.DESC, "_id");
-    List<User> msgList = userRepository.findAll(byCreation);
-    return msgList;
-  }
-
   @PostMapping("/login")
   public final UserResponse login(@RequestBody User user) {
     User userByName = userRepository.findByUsername(user.getUsername());
