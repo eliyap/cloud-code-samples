@@ -22,6 +22,17 @@ public class BackendController {
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
+  private static final JacksonFactory jacksonFactory = new JacksonFactory();
+  private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
+  private static String CLIENT_ID =
+    "974574715204-4ttrkcsmd7i4ltgmon64klu2a0uocjiu.apps.googleusercontent.com";
+  private static GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+    NET_HTTP_TRANSPORT,
+    jacksonFactory
+  )
+    .setAudience(Collections.singletonList(CLIENT_ID))
+    .build();
+
   @PostMapping("/googlesignup")
   public final UserResponse googleSignup(@RequestBody GoogleUser googleUser) {
     // save any new emails to database
@@ -31,9 +42,39 @@ public class BackendController {
     }
     return new UserResponse(true, null);
   }
- 
+
   @PostMapping("/googleverify")
   public final UserResponse googleVerify(@RequestBody GoogleUser googleUser) {
-    return new UserResponse(true, null);
+    String idTokenString = googleUser.getIdToken();
+
+    GoogleIdToken idToken;
+    try {
+      idToken = verifier.verify(idTokenString);
+    } catch (GeneralSecurityException | IOException e) {
+      return new UserResponse(false, "Could not verfify ID Token");
+    }
+    if (idToken != null) {
+      Payload payload = idToken.getPayload();
+
+      // Print user identifier
+      String userId = payload.getSubject();
+      System.out.println("User ID: " + userId);
+
+      // Get profile information from payload
+      String email = payload.getEmail();
+      boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+      String name = (String) payload.get("name");
+      String pictureUrl = (String) payload.get("picture");
+      String locale = (String) payload.get("locale");
+      String familyName = (String) payload.get("family_name");
+      String givenName = (String) payload.get("given_name");
+      // Use or store profile information
+      // ...
+      System.out.println(givenName);
+
+      return new UserResponse(true, null);
+    } else {
+      return new UserResponse(false, "Invalid ID token.");
+    }
   }
 }
