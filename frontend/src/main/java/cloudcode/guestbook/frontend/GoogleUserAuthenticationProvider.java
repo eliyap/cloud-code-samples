@@ -19,12 +19,16 @@ public class GoogleUserAuthenticationProvider
   @Override
   public Authentication authenticate(Authentication authentication)
     throws AuthenticationException {
+    // actually email
     String username = authentication.getPrincipal().toString();
+    
+    // actually id_token
     String password = authentication.getCredentials().toString();
+    
     URI url;
 
     try {
-      url = new URI(BackendURI.LOGIN);
+      url = new URI(BackendURI.GOOGLE);
     } catch (URISyntaxException e) {
       throw new AuthenticationServiceException(
         "Could not construct backend URL!"
@@ -34,7 +38,7 @@ public class GoogleUserAuthenticationProvider
     UserResponse result = new RestTemplate()
     .postForObject(
         url,
-        new HttpEntity<User>(new User("", username, password)),
+        new HttpEntity<GoogleUser>(new GoogleUser(username, password)),
         UserResponse.class
       );
     if (result.success) {

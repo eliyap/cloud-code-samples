@@ -49,7 +49,7 @@ public class GoogleUserLoginController {
       );
 
     // try manual auth
-    login(request, "foo", "bar");
+    login(request, googleUser.getEmail(), googleUser.getIdToken());
 
     return "redirect:/";
   }
