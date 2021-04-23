@@ -10,7 +10,20 @@
   <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
-  <script src="https://apis.google.com/js/platform.js?onload=onLoadCallback" async defer></script>
+  <script th:if="${param.logout}">
+    /**
+     * Last ditch, brute force solution.
+     * Even when ensuring script had loaded first,
+     * error `fa` was thrown (clearly part of some minified javascript).
+     * Solution: log the user once per second. Repeated attempts make no odds anyway.
+     */
+    const interval = setInterval(function () {
+      gapi.auth2.getAuthInstance().signOut().then(
+        console.log('User signed out.')
+      );
+    }, 1000);
+  </script>
+  <script src="https://apis.google.com/js/platform.js?onload=gapiCallback"></script>
   <script>
     function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
@@ -30,14 +43,8 @@
         form.appendChild(input); // add key/value pair to form
       }
       document.body.appendChild(form); // forms cannot be submitted outside of body
-      // form.submit(); // send the payload and navigate
+      form.submit(); // send the payload and navigate
     }
-  </script>
-  <script th:if="${param.logout}" defer>
-    window.onLoadCallback = function () {
-      gapi.auth2.getAuthInstance().signOut()
-        .then(console.log('User signed out.'))
-    };
   </script>
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
