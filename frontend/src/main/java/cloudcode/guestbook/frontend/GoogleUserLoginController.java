@@ -41,12 +41,12 @@ public class GoogleUserLoginController {
     System.out.println(googleUser.getEmail());
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
-    UserResponse response = new RestTemplate()
-    .postForObject(
-        new URI(BackendURI.GOOGLE),
-        new HttpEntity<GoogleUser>(googleUser, httpHeaders),
-        UserResponse.class
-      );
+    RestTemplate template = new RestTemplate();
+    template.postForObject(
+      new URI(BackendURI.GOOGLE),
+      new HttpEntity<GoogleUser>(googleUser, httpHeaders),
+      UserResponse.class
+    );
 
     // try manual auth
     login(request, googleUser.getEmail(), googleUser.getIdToken());
