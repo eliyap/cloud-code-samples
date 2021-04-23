@@ -30,7 +30,7 @@ public class GoogleUserLoginController {
   protected GoogleUserAuthenticationProvider googleUserAuthenticationProvider;
 
   @PostMapping(
-    value = "/googlesignin",
+    value = "/googlesignup",
     consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
   )
   public final String tokensignin(
@@ -41,22 +41,21 @@ public class GoogleUserLoginController {
     System.out.println(googleUser.getEmail());
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
-    UserResponse response = new RestTemplate()
-    .postForObject(
-        new URI(BackendURI.GOOGLE),
-        new HttpEntity<GoogleUser>(googleUser, httpHeaders),
-        UserResponse.class
-      );
-
-    // try manual auth
+    RestTemplate template = new RestTemplate();
+    
+    // ignore result: should always be successful anyway
+    template.postForObject(
+      new URI(BackendURI.GOOGLE_SIGNUP),
+      new HttpEntity<GoogleUser>(googleUser, httpHeaders),
+      UserResponse.class
+    );
     login(request, googleUser.getEmail(), googleUser.getIdToken());
-
     return "redirect:/";
   }
 
   // Manually log the User in.
   // Source: https://stackoverflow.com/a/8336233/12395667
-  public void login(
+  private void login(
     HttpServletRequest request,
     String userName,
     String password

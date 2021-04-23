@@ -13,15 +13,24 @@
   <script th:if="${param.logout}">
     /**
      * Last ditch, brute force solution.
-     * Even when ensuring script had loaded first,
-     * error `fa` was thrown (clearly part of some minified javascript).
-     * Solution: log the user once per second. Repeated attempts make no odds anyway.
+     * Context: Even ensuring script loaded, error `fa` was thrown (clearly part of minified JS).
      */
-    const interval = setInterval(function () {
-      gapi.auth2.getAuthInstance().signOut().then(
-        console.log('User signed out.')
-      );
-    }, 1000);
+    // flag for signout
+    let signedOut = false;
+
+    // attempt frequently until we succeed
+    const interval = setInterval(async function () {
+      // bail if already succesful (don't want to get API Access Locked)
+      if (signedOut) { return; }
+      const signedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+      console.log("Signed In: " + signedIn);
+      if (signedIn === true) {
+        gapi.auth2.getAuthInstance().signOut().then(async function () {
+          console.log('User signed out.');
+          signedOut = true;
+        });
+      }
+    }, 200);
   </script>
   <script src="https://apis.google.com/js/platform.js?onload=gapiCallback"></script>
   <script th:if="!${param.logout}">
@@ -35,7 +44,7 @@
       var form = document.createElement('form');
       form.style.visibility = 'hidden'; // no user interaction is necessary
       form.method = 'POST'; // forms by default use GET query strings
-      form.action = `${location.origin}/googlesignin`;
+      form.action = `${location.origin}/googlesignup`;
       for (key in payload) {
         var input = document.createElement('input');
         input.name = key;

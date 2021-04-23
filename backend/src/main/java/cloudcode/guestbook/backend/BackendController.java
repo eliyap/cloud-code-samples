@@ -1,9 +1,14 @@
 package cloudcode.guestbook.backend;
 
-import java.util.List;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,65 +20,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class BackendController {
 
   @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
   private GoogleUserRepository googleUserRepository;
 
-  /**
-   * endpoint for retrieving all guest book entries stored in database
-   * @return a list of User objects
-   */
-  @GetMapping("/messages")
-  public final List<User> getMessages() {
-    Sort byCreation = new Sort(Sort.Direction.DESC, "_id");
-    List<User> msgList = userRepository.findAll(byCreation);
-    return msgList;
-  }
+  private static final JacksonFactory jacksonFactory = new JacksonFactory();
+  private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
+  private static String CLIENT_ID =
+    "974574715204-4ttrkcsmd7i4ltgmon64klu2a0uocjiu.apps.googleusercontent.com";
+  private static GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+    NET_HTTP_TRANSPORT,
+    jacksonFactory
+  )
+    .setAudience(Collections.singletonList(CLIENT_ID))
+    .build();
 
-  @PostMapping("/login")
-  public final UserResponse login(@RequestBody User user) {
-    User userByName = userRepository.findByUsername(user.getUsername());
-    User match = userRepository.findByUsernameAndPassword(
-      user.getUsername(),
-      user.getPassword()
-    );
-
-    // DEBUG
-    System.out.println(
-      "Username: " + user.getUsername() + ", Password: " + user.getPassword()
-    );
-
-    if (userByName == null) {
-      return new UserResponse(false, "No Account with Username");
-    } else if (match == null) {
-      return new UserResponse(false, "Incorrect Password");
-    } else {
-      return new UserResponse(true, null);
+  @PostMapping("/googlesignup")
+  public final UserResponse googleSignup(@RequestBody GoogleUser googleUser) {
+    // save any new emails to database
+    // don't bother updating idToken, it doesn't matter
+    if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
+      googleUserRepository.save(googleUser);
     }
-  }
-
-  @Autowired
-  private CustomUserDetailsService userService;
-
-  @PostMapping("/signup")
-  public final UserResponse addUser(@RequestBody User user) {
-    Boolean emailExists = userService.findUserByEmail(user.getEmail()) != null;
-    Boolean usernameExists =
-      userService.findUserByUsername(user.getUsername()) != null;
-    if (emailExists) {
-      return new UserResponse(false, "Email already registered");
-    } else if (usernameExists) {
-      return new UserResponse(false, "Username already registered");
-    } else {
-      userRepository.save(user);
-      return new UserResponse(true, null);
-    }
-  }
-
-  @PostMapping("/googlesignin")
-  public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
-    // googleUserRepository.save(googleUser);
     return new UserResponse(true, null);
+  }
+
+  /**
+   * Verification Code from: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+   */
+  @PostMapping("/googleverify")
+  public final UserResponse googleVerify(@RequestBody GoogleUser googleUser) {
+    try {
+      if (verifier.verify(googleUser.getIdToken()) != null) {
+        return new UserResponse(true, null);
+      } else {
+        return new UserResponse(false, "Invalid ID token.");
+      }
+    } catch (GeneralSecurityException | IOException e) {
+      return new UserResponse(false, "Could not verfify ID Token");
+    }
   }
 }

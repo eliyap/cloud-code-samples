@@ -87,7 +87,7 @@ public class UserLoginController {
 
   // Manually log the User in.
   // Source: https://stackoverflow.com/a/8336233/12395667
-  public void login(
+  private void login(
     HttpServletRequest request,
     String userName,
     String password

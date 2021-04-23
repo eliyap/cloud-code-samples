@@ -3,7 +3,6 @@ package cloudcode.guestbook.frontend;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * defines the REST endpoints managed by the server.
@@ -18,9 +17,6 @@ public class HomepageController {
    */
   @GetMapping("/")
   public final String main(final Model model) {
-    RestTemplate restTemplate = new RestTemplate();
-    User[] response = restTemplate.getForObject(BackendURI.MESSAGES, User[].class);
-    model.addAttribute("messages", response);
     return "home";
   }
 }
