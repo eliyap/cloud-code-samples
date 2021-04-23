@@ -42,6 +42,8 @@ public class GoogleUserLoginController {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.set("Content-Type", "application/json");
     RestTemplate template = new RestTemplate();
+    
+    // ignore result: should always be successful anyway
     template.postForObject(
       new URI(BackendURI.GOOGLE),
       new HttpEntity<GoogleUser>(googleUser, httpHeaders),
