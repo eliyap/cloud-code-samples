@@ -9,7 +9,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -105,7 +107,13 @@ public class FrontendController {
         new HttpEntity<GoogleUser>(googleUser, httpHeaders),
         UserResponse.class
       );
-    return "home";
+
+    // try manual auth
+    SecurityContextHolder
+      .getContext()
+      .setAuthentication(new UsernamePasswordAuthenticationToken("foo", "bar"));
+
+    return "redirect:/";
   }
 
   @Autowired
