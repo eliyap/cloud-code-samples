@@ -36,7 +36,7 @@ public class UserController {
 
 
   @PostMapping("/signup")
-  public final UserResponse addUser(@RequestBody User user) {
+  public final UserResponse signup(@RequestBody User user) {
     Boolean emailExists = userService.findUserByEmail(user.getEmail()) != null;
     Boolean usernameExists =
       userService.findUserByUsername(user.getUsername()) != null;

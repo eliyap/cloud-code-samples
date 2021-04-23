@@ -35,7 +35,7 @@
       var form = document.createElement('form');
       form.style.visibility = 'hidden'; // no user interaction is necessary
       form.method = 'POST'; // forms by default use GET query strings
-      form.action = `${location.origin}/googlesignin`;
+      form.action = `${location.origin}/googlesignup`;
       for (key in payload) {
         var input = document.createElement('input');
         input.name = key;

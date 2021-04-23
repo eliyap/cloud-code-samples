@@ -28,7 +28,7 @@ public class GoogleUserAuthenticationProvider
     URI url;
 
     try {
-      url = new URI(BackendURI.GOOGLE);
+      url = new URI(BackendURI.GOOGLE_SIGNUP);
     } catch (URISyntaxException e) {
       throw new AuthenticationServiceException(
         "Could not construct backend URL!"

@@ -14,8 +14,8 @@ public class BackendController {
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
-  @PostMapping("/googlesignin")
-  public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
+  @PostMapping("/googlesignup")
+  public final UserResponse googlesignup(@RequestBody GoogleUser googleUser) {
     // save any new emails to database
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {

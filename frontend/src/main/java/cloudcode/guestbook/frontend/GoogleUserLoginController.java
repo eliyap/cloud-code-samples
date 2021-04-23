@@ -30,7 +30,7 @@ public class GoogleUserLoginController {
   protected GoogleUserAuthenticationProvider googleUserAuthenticationProvider;
 
   @PostMapping(
-    value = "/googlesignin",
+    value = "/googlesignup",
     consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
   )
   public final String tokensignin(
@@ -45,7 +45,7 @@ public class GoogleUserLoginController {
     
     // ignore result: should always be successful anyway
     template.postForObject(
-      new URI(BackendURI.GOOGLE),
+      new URI(BackendURI.GOOGLE_SIGNUP),
       new HttpEntity<GoogleUser>(googleUser, httpHeaders),
       UserResponse.class
     );
