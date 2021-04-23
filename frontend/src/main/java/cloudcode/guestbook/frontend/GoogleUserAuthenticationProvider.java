@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class GoogleUserAuthenticationProvider implements AuthenticationProvider {
+public class GoogleUserAuthenticationProvider
+  implements AuthenticationProvider {
 
   @Override
   public Authentication authenticate(Authentication authentication)
