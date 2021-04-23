@@ -24,7 +24,7 @@
     }, 1000);
   </script>
   <script src="https://apis.google.com/js/platform.js?onload=gapiCallback"></script>
-  <script>
+  <script th:if="!${param.logout}">
     function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
 
