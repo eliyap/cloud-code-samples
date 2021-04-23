@@ -33,7 +33,7 @@ public class GoogleUserAuthenticationProvider implements AuthenticationProvider 
     UserResponse result = new RestTemplate()
     .postForObject(
         url,
-        new HttpEntity<User>(new User("", username, password)),
+        new HttpEntity<GoogleUser>(new GoogleUser(username, password)),
         UserResponse.class
       );
     if (result.success) {
