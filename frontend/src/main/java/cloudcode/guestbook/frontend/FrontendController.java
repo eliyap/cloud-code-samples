@@ -51,7 +51,15 @@ public class FrontendController {
         new HttpEntity<User>(user, httpHeaders),
         UserResponse.class
       );
+    return autoLoginRedirect(user, attributes, response);
+  }
 
+  // Creates a model to have the user automatically "log in"
+  private RedirectView autoLoginRedirect(
+    final User user,
+    RedirectAttributes attributes,
+    UserResponse response
+  ) {
     RedirectView view = new RedirectView("/login");
     if (response.success) {
       attributes.addFlashAttribute("username", user.getUsername());
