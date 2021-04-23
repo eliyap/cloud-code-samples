@@ -73,7 +73,11 @@ public class BackendController {
 
   @PostMapping("/googlesignin")
   public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
-    // googleUserRepository.save(googleUser);
+    // save any new emails to database
+    // don't bother updating idToken, it doesn't matter
+    if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
+      googleUserRepository.save(googleUser);
+    }
     return new UserResponse(true, null);
   }
 }
