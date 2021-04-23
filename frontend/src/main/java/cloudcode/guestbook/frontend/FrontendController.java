@@ -9,14 +9,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +28,9 @@ import org.springframework.web.servlet.view.RedirectView;
  */
 @Controller
 public class FrontendController {
+
+  @Autowired
+  protected AuthenticationManager authenticationManager;
 
   /**
    * endpoint for the login page
@@ -115,19 +116,16 @@ public class FrontendController {
     return "redirect:/";
   }
 
+  // Manually log the User in.
+  // Source: https://stackoverflow.com/a/8336233/12395667
   public void login(
     HttpServletRequest request,
     String userName,
     String password
   ) {
-    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-      userName,
-      password
-    );
-
     // Authenticate the user
     Authentication authentication = authenticationManager.authenticate(
-      authRequest
+      new UsernamePasswordAuthenticationToken(userName, password)
     );
     SecurityContext securityContext = SecurityContextHolder.getContext();
     securityContext.setAuthentication(authentication);
@@ -136,10 +134,4 @@ public class FrontendController {
     HttpSession session = request.getSession(true);
     session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
   }
-
-  @Autowired
-  protected AuthenticationProvider authenticationProvider;
-
-  @Autowired
-  protected AuthenticationManager authenticationManager;
 }
