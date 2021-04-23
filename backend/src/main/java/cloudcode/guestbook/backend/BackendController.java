@@ -43,38 +43,19 @@ public class BackendController {
     return new UserResponse(true, null);
   }
 
+  /**
+   * Verification Code from: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+   */
   @PostMapping("/googleverify")
   public final UserResponse googleVerify(@RequestBody GoogleUser googleUser) {
-    String idTokenString = googleUser.getIdToken();
-
-    GoogleIdToken idToken;
     try {
-      idToken = verifier.verify(idTokenString);
+      if (verifier.verify(googleUser.getIdToken()) != null) {
+        return new UserResponse(true, null);
+      } else {
+        return new UserResponse(false, "Invalid ID token.");
+      }
     } catch (GeneralSecurityException | IOException e) {
       return new UserResponse(false, "Could not verfify ID Token");
-    }
-    if (idToken != null) {
-      Payload payload = idToken.getPayload();
-
-      // Print user identifier
-      String userId = payload.getSubject();
-      System.out.println("User ID: " + userId);
-
-      // Get profile information from payload
-      String email = payload.getEmail();
-      boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-      String name = (String) payload.get("name");
-      String pictureUrl = (String) payload.get("picture");
-      String locale = (String) payload.get("locale");
-      String familyName = (String) payload.get("family_name");
-      String givenName = (String) payload.get("given_name");
-      // Use or store profile information
-      // ...
-      System.out.println(givenName);
-
-      return new UserResponse(true, null);
-    } else {
-      return new UserResponse(false, "Invalid ID token.");
     }
   }
 }
