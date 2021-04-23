@@ -73,7 +73,7 @@ public class BackendController {
 
   @PostMapping("/googlesignin")
   public final UserResponse addGoogleUser(@RequestBody GoogleUser googleUser) {
-    googleUserRepository.save(googleUser);
+    // googleUserRepository.save(googleUser);
     return new UserResponse(true, null);
   }
 }
