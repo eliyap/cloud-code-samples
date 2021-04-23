@@ -17,7 +17,7 @@
 
       const payload = {
         "email": profile.getEmail(),
-        "password": googleUser.getAuthResponse().id_token
+        "idToken": googleUser.getAuthResponse().id_token
       };
       var form = document.createElement('form');
       form.style.visibility = 'hidden'; // no user interaction is necessary

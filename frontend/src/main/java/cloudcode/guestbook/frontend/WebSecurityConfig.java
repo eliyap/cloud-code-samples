@@ -42,7 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(final AuthenticationManagerBuilder auth) {
-    auth.authenticationProvider(authProvider).eraseCredentials(false);
+    auth.authenticationProvider(userAuthenticationProvider).eraseCredentials(false);
+    auth.authenticationProvider(googleUserAuthenticationProvider).eraseCredentials(false);
   }
   
   @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
@@ -52,7 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Autowired
-  private UserAuthenticationProvider authProvider;
+  private UserAuthenticationProvider userAuthenticationProvider;
+  
+  @Autowired
+  private GoogleUserAuthenticationProvider googleUserAuthenticationProvider;
 
   @Bean
   public PasswordEncoder passwordEncoder() {

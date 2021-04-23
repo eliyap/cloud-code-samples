@@ -14,13 +14,13 @@ public class GoogleUser {
   )
   private String email;
 
-  private String id_token;
+  private String idToken;
 
   public GoogleUser() {}
 
-  public GoogleUser(String email, String id_token) {
+  public GoogleUser(String email, String idToken) {
     this.email = email;
-    this.id_token = id_token;
+    this.idToken = idToken;
   }
 
   public final String getEmail() {
@@ -32,10 +32,10 @@ public class GoogleUser {
   }
 
   public final String getIdToken() {
-    return id_token;
+    return idToken;
   }
 
-  public final void setIdToken(String id_token) {
-    this.id_token = id_token;
+  public final void setIdToken(String idToken) {
+    this.idToken = idToken;
   }
 }
