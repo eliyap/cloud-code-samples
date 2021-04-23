@@ -30,6 +30,9 @@ public class UserLoginController {
 
   @Autowired
   protected AuthenticationManager authenticationManager;
+  
+  @Autowired
+  protected UserAuthenticationProvider userAuthenticationProvider;
 
   /**
    * endpoint for handling form submission
@@ -90,7 +93,7 @@ public class UserLoginController {
     String password
   ) {
     // Authenticate the user
-    Authentication authentication = authenticationManager.authenticate(
+    Authentication authentication = userAuthenticationProvider.authenticate(
       new UsernamePasswordAuthenticationToken(userName, password)
     );
     SecurityContext securityContext = SecurityContextHolder.getContext();
