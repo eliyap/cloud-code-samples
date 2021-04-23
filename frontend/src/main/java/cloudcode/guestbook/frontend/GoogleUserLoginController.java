@@ -49,16 +49,13 @@ public class GoogleUserLoginController {
       new HttpEntity<GoogleUser>(googleUser, httpHeaders),
       UserResponse.class
     );
-
-    // try manual auth
     login(request, googleUser.getEmail(), googleUser.getIdToken());
-
     return "redirect:/";
   }
 
   // Manually log the User in.
   // Source: https://stackoverflow.com/a/8336233/12395667
-  public void login(
+  private void login(
     HttpServletRequest request,
     String userName,
     String password
