@@ -6,9 +6,14 @@ public class BackendURI {
     "http://%s/signup",
     System.getenv("GUESTBOOK_API_ADDR")
   );
-  
+
   public static String GOOGLE_SIGNUP = String.format(
     "http://%s/googlesignup",
+    System.getenv("GUESTBOOK_API_ADDR")
+  );
+  
+  public static String GOOGLE_VERIFY = String.format(
+    "http://%s/googleverify",
     System.getenv("GUESTBOOK_API_ADDR")
   );
 

@@ -15,12 +15,17 @@ public class BackendController {
   private GoogleUserRepository googleUserRepository;
 
   @PostMapping("/googlesignup")
-  public final UserResponse googlesignup(@RequestBody GoogleUser googleUser) {
+  public final UserResponse googleSignup(@RequestBody GoogleUser googleUser) {
     // save any new emails to database
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
       googleUserRepository.save(googleUser);
     }
+    return new UserResponse(true, null);
+  }
+ 
+  @PostMapping("/googleverify")
+  public final UserResponse googleVerify(@RequestBody GoogleUser googleUser) {
     return new UserResponse(true, null);
   }
 }
