@@ -8,6 +8,11 @@ public class GoogleUser {
 
   public GoogleUser() {}
 
+  public GoogleUser(String email, String id_token) {
+    this.email = email;
+    this.id_token = id_token;
+  }
+
   public final String getEmail() {
     return email;
   }
@@ -15,7 +20,7 @@ public class GoogleUser {
   public final void setEmail(String email) {
     this.email = email;
   }
-  
+
   public final String getIdToken() {
     return id_token;
   }
