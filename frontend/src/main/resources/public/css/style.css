@@ -1,3 +1,8 @@
+:root {
+  --search-bar-height: 2rem;
+  --brand-color: #6856f2;
+}
+
 body {
   font-family: "Roboto", sans-serif;
   background: #f8f9fa;
@@ -96,7 +101,7 @@ svg.icn {
 }
 
 nav {
-  background-color: #6856f2;
+  background-color: var(--brand-color);
 }
 
 nav a {
@@ -137,10 +142,25 @@ button.fw-btn {
 input[type="submit"].search-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 14a8 8 0 1 1 8 8 8.01 8.01 0 0 1-8-8m21.56 11.44c-.272-.273-2.762-2.561-5.418-4.883a.497.497 0 0 1-.068-.672 10.02 10.02 0 1 0-2.189 2.189.497.497 0 0 1 .672.068c2.322 2.656 4.61 5.146 4.883 5.418a1.5 1.5 0 0 0 2.12-2.12'/%3E%3C/svg%3E%0A");
   background-repeat: no-repeat;
-  width: 2rem;
-  height: 2rem;
+  width: var(--search-bar-height);
   background-color: transparent;
   border: none;
+}
+
+form.search-bar {
+  border-radius: 9001px;
+  border: 1px solid var(--brand-color);
+  display: inline-block;
+  padding-right: 0.25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: calc(var(--search-bar-height) / 2 + 0.25rem);
+}
+
+form.search-bar > * {
+  line-height: var(--search-bar-height);
+  height: var(--search-bar-height);
+  vertical-align: middle;
 }
 
 @media (min-width: 1200px) {
