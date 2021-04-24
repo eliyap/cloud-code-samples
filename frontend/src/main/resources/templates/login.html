@@ -32,9 +32,12 @@
       }
     }, 200);
   </script>
-  <script src="https://apis.google.com/js/platform.js?onload=gapiCallback"></script>
-  <script th:if="!${param.logout}">
+  <script src="https://apis.google.com/js/platform.js"></script>
+  <script>
     function onSignIn(googleUser) {
+      // if user is not yet signed out, do not log user in
+      // if script is missing, signedOut will be `undefined` and we can proceed
+      if (typeof signedOut !== 'undefined' && signedOut === false) { return; }
       var profile = googleUser.getBasicProfile();
 
       const payload = {

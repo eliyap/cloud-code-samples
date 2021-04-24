@@ -22,23 +22,13 @@
     </form>
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
-  <div class="header">
-    <div class="container">
-      <h1>
-        <a href="/">Welcome!</a>
-      </h1>
-      <a href="#" class="text-muted">View on GitHub</a>
-    </div>
-  </div>
-
-  <div class="container posts mt-0">
-    <div class="row">
-      <div class="col-md-6">
-        Col1
-      </div>
-      <div class="col-md-6">
-        Col2
-      </div>
+  <div class="container">
+    <h1 class="centered font-weight-bold">STOCK SEARCH</h1>
+    <div class="text-center">
+      <form class="search-bar form-inline">
+        <input type="text" class="no-border" required name="stock">
+        <input type="submit" value="" class="search-icon">
+      </form>
     </div>
   </div>
 </body>
