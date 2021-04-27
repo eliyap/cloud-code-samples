@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <title>Guestbook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
@@ -34,13 +36,22 @@
     </div>
   </div>
   <script>
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
       "url": "${location.origin}/stock?stock=PLACEHOLDER",
       "method": "GET",
-      "success": function() {
+      "beforeSend": function (xhr, settings) {
+        xhr.setRequestHeader(header, token);
+      },
+      "success": function (data, status, _) {
+        console.log(status);
+        console.log(data);
         alert("done");
       },
-      "error": function() {
+      "error": function (xhr, status, error) {
+        console.log(status);
+        console.log(error);
         alert("error");
       },
     });
