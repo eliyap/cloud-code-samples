@@ -33,6 +33,18 @@
       </form>
     </div>
   </div>
+  <script>
+    $.ajax({
+      "url": "${location.origin}/stock",
+      "method": "GET",
+      "success": function() {
+        alert("done");
+      },
+      "error": function() {
+        alert("error");
+      },
+    });
+  </script>
 </body>
 
 </html>
