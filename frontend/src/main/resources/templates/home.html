@@ -93,7 +93,10 @@
     const onSuccess = function (data, status, _) {
       // Rounding to 2 DP: https://stackoverflow.com/a/11832950/12395667
       const change = Math.round(((data.iex.last - data.iex.prevClose) + Number.EPSILON) * 100) / 100;
-
+      
+      // Check whether market was open as of 60s ago
+      const isOpen = (new Date() - data.iex.timestamp) < 60;
+      
       container.innerHTML = `
       <div class="row mx-1">
         <h1>
@@ -114,8 +117,13 @@
       <div class="row mx-1">
         <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
         <div class="flex-grow-1"></div>
-        <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
+        <div class="flex-grow-0">${data.iex.timestamp}</div>
       </div>
+      <form>
+        <label>Quantity: </label>
+        <input type="text" required name="quantity" id="quantity">
+        <input type="submit" value="Buy" id="buy">
+      </form>
       <div class="row mx-1">
         <div class="flex-grow-0">FORM HERE</div>
         <div class="flex-grow-1"></div>
@@ -125,7 +133,9 @@
         <div class="flex-grow-1"></div>
       </div>
       <div class="center-children">
-        <div class="font-weight-bold text-gray mt-4">MARKET STATUS HERE</div>
+        <div class="font-weight-bold text-gray mt-4" style="background-color:${isOpen ? "green" : "pink"}">
+          Market ${isOpen ? "Open" : "Closed"} on ${data.iex.timestamp}
+        </div>
         <div class="font-weight-bold text-gray mt-4">Summary</div>
         <div class="horizontal-rule mt-3"></div>
         <table class="mt-5">
