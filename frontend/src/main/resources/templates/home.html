@@ -29,31 +29,46 @@
   <div class="container">
     <h1 class="centered font-weight-bold">STOCK SEARCH</h1>
     <div class="text-center">
-      <form class="search-bar form-inline">
+      <form class="search-bar form-inline" id="search">
         <input type="text" class="no-border" required name="stock">
         <input type="submit" value="" class="search-icon">
       </form>
     </div>
+    <div id="error"></div>
   </div>
   <script>
+    const errorField = $("#error")[0];
+
+    // get CSRF Token
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-    $.ajax({
-      "url": `${location.origin}/stock?ticker=PLACEHOLDER`,
-      "method": "GET",
-      "beforeSend": function (xhr, settings) {
-        xhr.setRequestHeader(header, token);
-      },
-      "success": function (data, status, _) {
-        console.log(status);
-        console.log(data);
-        alert("done");
-      },
-      "error": function (xhr, status, error) {
-        console.log(status);
-        console.log(error);
-        alert("error");
-      },
+
+    // Define AJAX Callbacks
+    const onSuccess = function (data, status, _) {
+      console.log(status);
+      console.log(data);
+      alert("done");
+    }
+    const onError = function (xhr, status, error) {
+      errorField.innerText = `
+      ${xhr.status}
+      ${xhr.responseText}
+      `;
+    }
+
+    // Set form submit 
+    $("#search").submit(function () {
+      // clear error message, if any
+      errorField.innerHTML = "";
+
+      $.ajax({
+        "url": `${location.origin}/stock?ticker=PLACEHOLDER`,
+        "method": "GET",
+        "success": onSuccess,
+        "error": onError,
+      });
+      // disable form submit action
+      return false;
     });
   </script>
 </body>

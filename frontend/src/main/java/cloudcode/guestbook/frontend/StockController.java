@@ -1,5 +1,6 @@
 package cloudcode.guestbook.frontend;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,14 +33,18 @@ public class StockController {
       );
       return ResponseEntity.ok().body(stockDetails);
     } catch (HttpClientErrorException e) {
-      if (e.getRawStatusCode() == 404) {
-        System.out.println("404ed");
+      int status_code = e.getRawStatusCode();
+      if (status_code == 404) {
+        return ResponseEntity
+          .status(e.getRawStatusCode())
+          .contentType(MediaType.TEXT_PLAIN)
+          .body("No Such Stock");
       } else {
-        System.out.println(e.getCause());
-        System.out.println(e.getMostSpecificCause());
+        return ResponseEntity
+          .status(e.getRawStatusCode())
+          .contentType(MediaType.TEXT_PLAIN)
+          .body("Encountered an error");
       }
     }
-
-    return ResponseEntity.ok().body("TEST");
   }
 }
