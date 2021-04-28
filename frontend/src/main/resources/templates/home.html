@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/f030087652.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -91,7 +92,40 @@
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
       container.innerHTML = `
-      YOU ARE AUTHENTICATED
+      <div class="center-children">
+        <h1 class="font-weight-bold">${data.metadata.ticker}</h1>
+        <h2 class="font-weight-bold text-gray">${data.metadata.name}</h2>
+        <div>${data.metadata.exchangeCode}</div>
+        <div class="font-weight-bold text-gray mt-4">Summary</div>
+        <div class="horizontal-rule mt-3"></div>
+        <table class="mt-5">
+          <tbody>
+            <tr>
+              <td class="col-left">High Price:</td>
+              <td class="col-right">${data.price.high}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Low Price:</td>
+              <td class="col-right">${data.price.low}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Open Price:</td>
+              <td class="col-right">${data.price.open}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Close:</td>
+              <td class="col-right">${data.price.close}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Volume:</td>
+              <td class="col-right">${data.price.volume}</td>
+            </tr>
+          </tbody>
+        </table>
+        <h4 class="mt-5 font-weight-bold">Company's Description</h4>
+      </div>
+      <p>Start Date: ${data.metadata.startDate}</p>
+      <p>${data.metadata.description}</p>
       `;
     }
   </script>
