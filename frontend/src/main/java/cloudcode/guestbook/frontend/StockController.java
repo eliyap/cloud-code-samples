@@ -1,5 +1,8 @@
 package cloudcode.guestbook.frontend;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,7 +20,8 @@ public class StockController {
   private static String token = "548557c5bb89f21ff31b725cebc603b73396bb0c";
 
   @GetMapping("/stock")
-  public final ResponseEntity<?> stock(@RequestParam String ticker) {
+  public final ResponseEntity<?> stock(@RequestParam String ticker)
+    throws URISyntaxException {
     Authentication auth = SecurityContextHolder
       .getContext()
       .getAuthentication();
@@ -27,11 +31,18 @@ public class StockController {
 
     try {
       RestTemplate template = new RestTemplate();
-      StockDetails stockDetails = template.getForObject(
-        baseURL + ticker + "/prices?token=" + token,
-        StockDetails.class
+      URI url = new URI(baseURL + ticker + "/prices?token=" + token);
+
+      ResponseEntity<StockDetailsList> response = template.getForEntity(
+        url,
+        StockDetailsList.class
       );
-      return ResponseEntity.ok().body(stockDetails);
+      StockDetailsList list = response.getBody();
+      if (list.isEmpty()) {
+        throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+      }
+      StockDetails details = list.get(0);
+      return ResponseEntity.ok(details);
     } catch (HttpClientErrorException e) {
       int status_code = e.getRawStatusCode();
       if (status_code == 404) {
