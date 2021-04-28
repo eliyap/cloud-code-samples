@@ -140,11 +140,23 @@ button.fw-btn {
 }
 
 .col-left {
-    text-align: right;
+  text-align: right;
 }
 
 .col-right {
-    text-align: left;
+  text-align: left;
+}
+
+.left-right:first-child {
+  margin-right: auto;
+  margin-left: 0;
+  text-align: left;
+}
+
+.left-right:last-child {
+  margin-right: 0;
+  margin-left: auto;
+  text-align: right;
 }
 
 input[type="submit"].search-icon {
@@ -172,22 +184,22 @@ form.search-bar > * {
 }
 
 .center-children > * {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .text-gray {
-    color: gray;
+  color: gray;
 }
 
 .text-lightgray {
-    color: lightgray;
+  color: lightgray;
 }
 
 .horizontal-rule {
-    height: 3px;
-    background-color: var(--brand-color);
+  height: 3px;
+  background-color: var(--brand-color);
 }
 
 @media (min-width: 1200px) {
