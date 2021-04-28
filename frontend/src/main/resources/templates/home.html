@@ -50,6 +50,32 @@
     const onSuccess = function (data, status, _) {
       console.log(status);
       console.log(data);
+      container.innerHTML = `
+      <table>
+        <tbody>
+          <tr>
+            <td class="col-left">High Price:</td>
+            <td class="col-right">${data.high}</td>
+          </tr>
+          <tr>
+            <td class="col-left">Low Price:</td>
+            <td class="col-right">${data.low}</td>
+          </tr>
+          <tr>
+            <td class="col-left">Open Price:</td>
+            <td class="col-right">${data.open}</td>
+          </tr>
+          <tr>
+            <td class="col-left">Close:</td>
+            <td class="col-right">${data.close}</td>
+          </tr>
+          <tr>
+            <td class="col-left">Volume:</td>
+            <td class="col-right">${data.volume}</td>
+          </tr>
+        </tbody>
+      </table>
+      `;
     }
     const onError = function (xhr, status, error) {
       errorField.innerText = `
