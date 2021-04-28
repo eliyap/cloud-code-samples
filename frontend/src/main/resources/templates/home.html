@@ -132,7 +132,7 @@
         <label>Quantity: </label>
         <input type="text" required name="quantity" id="quantity">
         <br/>
-        <input type="submit" value="Buy" id="buy">
+        <input class="px-1" type="submit" value="Buy" id="buy">
       </form>
       <div class="center-children">
         <div>
@@ -147,22 +147,32 @@
             <tr>
               <td class="col-left">High Price:</td>
               <td class="col-right">${data.iex.high}</td>
+              <td class="col-left">Mid Price:</td>
+              <td class="col-right">${data.iex.mid}</td>
             </tr>
             <tr>
               <td class="col-left">Low Price:</td>
               <td class="col-right">${data.iex.low}</td>
+              <td class="col-left">Ask Price:</td>
+              <td class="col-right">${data.iex.askPrice}</td>
             </tr>
             <tr>
               <td class="col-left">Open Price:</td>
               <td class="col-right">${data.iex.open}</td>
+              <td class="col-left">Ask Size:</td>
+              <td class="col-right">${data.iex.askSize}</td>
             </tr>
             <tr>
               <td class="col-left">Prev Close:</td>
               <td class="col-right">${data.iex.prevClose}</td>
+              <td class="col-left">Bid Price:</td>
+              <td class="col-right">${data.iex.bidPrice}</td>
             </tr>
             <tr>
               <td class="col-left">Volume:</td>
               <td class="col-right">${data.iex.volume}</td>
+              <td class="col-left">Bid Size:</td>
+              <td class="col-right">${data.iex.bidSize}</td>
             </tr>
           </tbody>
         </table>
