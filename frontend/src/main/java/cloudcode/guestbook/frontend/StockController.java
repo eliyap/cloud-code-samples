@@ -30,10 +30,19 @@ public class StockController {
     System.out.println("Det: " + auth.getDetails());
 
     try {
-      StockDetails details = fetchDetails(ticker);
-      StockMeta meta = fetchMeta(ticker);
-      StockInfo info = new StockInfo(details, meta);
-      return ResponseEntity.ok(info);
+      /**
+       * For some reason, the backend has `isAuthenticated` backwards: 
+       * anonymous users return True, authenticated ones return False.
+       * Just roll with it.
+       */
+      if (auth.isAuthenticated()) {
+        StockDetails details = fetchDetails(ticker);
+        StockMeta meta = fetchMeta(ticker);
+        StockInfo info = new StockInfo(details, meta);
+        return ResponseEntity.ok(info);
+      } else {
+        return ResponseEntity.ok("AUTHENTICATED");
+      }
     } catch (HttpClientErrorException e) {
       int status_code = e.getRawStatusCode();
       if (status_code == 404) {
