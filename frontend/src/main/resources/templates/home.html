@@ -92,7 +92,7 @@
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
       container.innerHTML = `
-      <div class="row left-right">
+      <div class="row mx-1">
         <h1>
           <span class="font-weight-bold flex-grow-0">${data.metadata.ticker}</span>
           <i class="far fa-star"></i>
@@ -100,21 +100,21 @@
         <div class="flex-grow-1"></div>
         <h1 class="font-weight-bold flex-grow-0">${data.metadata.ticker}</h1>
       </div>
-      <div class="row left-right">
+      <div class="row mx-1">
         <h2 class="font-weight-bold text-gray flex-grow-0">${data.metadata.name}</h2>
         <div class="flex-grow-1"></div>
         <h2 class="font-weight-bold flex-grow-0">${data.metadata.ticker}</h2>
       </div>
-      <div class="row left-right">
+      <div class="row mx-1">
         <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
         <div class="flex-grow-1"></div>
         <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
       </div>
-      <div class="row left-right">
+      <div class="row mx-1">
         <div class="flex-grow-0">FORM HERE</div>
         <div class="flex-grow-1"></div>
       </div>
-      <div class="row left-right">
+      <div class="row mx-1">
         <div class="flex-grow-0">BUTTON HERE</div>
         <div class="flex-grow-1"></div>
       </div>
