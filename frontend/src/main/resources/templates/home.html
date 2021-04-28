@@ -31,7 +31,7 @@
     <h1 class="centered font-weight-bold">STOCK SEARCH</h1>
     <div class="text-center">
       <form class="search-bar form-inline" id="search">
-        <input type="text" class="no-border" required name="stock" id="stock">
+        <input type="text" class="no-border" required name="stock" id="stock" autofocus>
         <input type="submit" value="" class="search-icon">
       </form>
     </div>
@@ -93,10 +93,19 @@
     const onSuccess = function (data, status, _) {
       // Rounding to 2 DP: https://stackoverflow.com/a/11832950/12395667
       const change = Math.round(((data.iex.last - data.iex.prevClose) + Number.EPSILON) * 100) / 100;
-      
+      const percentChange = Math.round(((change / data.iex.prevClose) + Number.EPSILON) * 100 * 100) / 100;
+
       // Check whether market was open as of 60s ago
       const isOpen = (new Date() - data.iex.timestamp) < 60;
-      
+
+      // format timestamp
+      let ts = new Date();
+      ts.setTime(Date.parse(data.iex.timestamp));
+      const HH = String(ts.getHours()).padStart(2, '0');
+      const mm = String(ts.getMinutes()).padStart(2, '0');
+      const SS = String(ts.getSeconds()).padStart(2, '0');
+      const timestamp = `${ts.getFullYear()}-${ts.getMonth() + 1}-${ts.getDate()} ${HH}:${mm}:${SS}`;
+
       container.innerHTML = `
       <div class="row mx-1">
         <h1>
@@ -104,37 +113,32 @@
           <i class="far fa-star"></i>
         </h1>
         <div class="flex-grow-1"></div>
-        <h1 class="font-weight-bold flex-grow-0">${data.iex.last}</h1>
+        <h1 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">${data.iex.last}</h1>
       </div>
       <div class="row mx-1">
         <h2 class="font-weight-bold text-gray flex-grow-0">${data.metadata.name}</h2>
         <div class="flex-grow-1"></div>
         <h2 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">
           <i class="fas fa-caret-${(change > 0) ? "up" : "down"}"></i>
-          ${Math.abs(change)}
+          ${change} (${percentChange})%
         </h2>
       </div>
       <div class="row mx-1">
         <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
         <div class="flex-grow-1"></div>
-        <div class="flex-grow-0">${data.iex.timestamp}</div>
+        <div class="flex-grow-0">${timestamp}</div>
       </div>
-      <form>
+      <form class="mx-1">
         <label>Quantity: </label>
         <input type="text" required name="quantity" id="quantity">
+        <br/>
         <input type="submit" value="Buy" id="buy">
       </form>
-      <div class="row mx-1">
-        <div class="flex-grow-0">FORM HERE</div>
-        <div class="flex-grow-1"></div>
-      </div>
-      <div class="row mx-1">
-        <div class="flex-grow-0">BUTTON HERE</div>
-        <div class="flex-grow-1"></div>
-      </div>
       <div class="center-children">
-        <div class="font-weight-bold text-gray mt-4" style="background-color:${isOpen ? "green" : "pink"}">
-          Market ${isOpen ? "Open" : "Closed"} on ${data.iex.timestamp}
+        <div>
+          <span class="font-weight-bold" style="background-color:${isOpen ? "rgb(219,236,219)" : "rgb(240,216,217)"}">
+            ${isOpen ? "Market Open" : `Market Closed on ${timestamp}`}
+          </span>
         </div>
         <div class="font-weight-bold text-gray mt-4">Summary</div>
         <div class="horizontal-rule mt-3"></div>

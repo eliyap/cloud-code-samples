@@ -190,6 +190,13 @@ form.search-bar > * {
   background-color: var(--brand-color);
 }
 
+#buy {
+  background-color: rgb(84,164,80);
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+}
+
 @media (min-width: 1200px) {
   .container {
     max-width: 900px;
