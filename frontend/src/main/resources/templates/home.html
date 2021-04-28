@@ -50,13 +50,11 @@
     const onSuccess = function (data, status, _) {
       console.log(status);
       console.log(data);
-      alert(stock.val());
     }
     const onError = function (xhr, status, error) {
       errorField.innerText = `
       ${xhr.status}
       ${xhr.responseText}`;
-      alert(stock.val());
     }
 
     // Set form submit 
