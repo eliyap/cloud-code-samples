@@ -167,6 +167,11 @@ form.search-bar > * {
   vertical-align: middle;
 }
 
+.center-children > * {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @media (min-width: 1200px) {
   .container {
     max-width: 900px;
