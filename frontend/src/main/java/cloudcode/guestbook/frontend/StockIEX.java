@@ -4,6 +4,7 @@ public class StockIEX {
 
   public String ticker;
   public Float last;
+  public Float prevClose;
   public Float low;
   public Float high;
   public Float open;
