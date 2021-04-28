@@ -41,7 +41,10 @@ public class StockController {
         StockInfo info = new StockInfo(details, meta);
         return ResponseEntity.ok(info);
       } else {
-        return ResponseEntity.ok("AUTHENTICATED");
+        StockIEX iex = fetchIEX(ticker);
+        StockMeta meta = fetchMeta(ticker);
+        StockInfo info = new StockInfo(iex, meta);
+        return ResponseEntity.ok(info);
       }
     } catch (HttpClientErrorException e) {
       int status_code = e.getRawStatusCode();
