@@ -132,7 +132,7 @@
         <label>Quantity: </label>
         <input type="text" required name="quantity" id="quantity">
         <br/>
-        <input class="px-1" type="submit" value="Buy" id="buy">
+        <input class="px-4 py-1" type="submit" value="Buy" id="buy">
       </form>
       <div class="center-children">
         <div>
@@ -145,34 +145,29 @@
         <table class="mt-5">
           <tbody>
             <tr>
-              <td class="col-left">High Price:</td>
+              <td class="col-right">High Price:</td>
               <td class="col-right">${data.iex.high}</td>
-              <td class="col-left">Mid Price:</td>
-              <td class="col-right">${data.iex.mid}</td>
+              ${isOpen ? '<td class="col-right">Mid Price:</td><td class="col-right">${data.iex.mid}</td>' : ''}
             </tr>
             <tr>
-              <td class="col-left">Low Price:</td>
+              <td class="col-right">Low Price:</td>
               <td class="col-right">${data.iex.low}</td>
-              <td class="col-left">Ask Price:</td>
-              <td class="col-right">${data.iex.askPrice}</td>
+              ${isOpen ? '<td class="col-right">Ask Price:</td><td class="col-right">${data.iex.askPrice}</td>' : ''}
             </tr>
             <tr>
-              <td class="col-left">Open Price:</td>
+              <td class="col-right">Open Price:</td>
               <td class="col-right">${data.iex.open}</td>
-              <td class="col-left">Ask Size:</td>
-              <td class="col-right">${data.iex.askSize}</td>
+              ${isOpen ? '<td class="col-right">Ask Size:</td><td class="col-right">${data.iex.askSize}</td>' : ''}
             </tr>
             <tr>
-              <td class="col-left">Prev Close:</td>
+              <td class="col-right">Prev Close:</td>
               <td class="col-right">${data.iex.prevClose}</td>
-              <td class="col-left">Bid Price:</td>
-              <td class="col-right">${data.iex.bidPrice}</td>
+              ${isOpen ? '<td class="col-right">Bid Price:</td><td class="col-right">${data.iex.bidPrice}</td>' : ''}
             </tr>
             <tr>
-              <td class="col-left">Volume:</td>
+              <td class="col-right">Volume:</td>
               <td class="col-right">${data.iex.volume}</td>
-              <td class="col-left">Bid Size:</td>
-              <td class="col-right">${data.iex.bidSize}</td>
+              ${isOpen ? '<td class="col-right">Bid Size:</td><td class="col-right">${data.iex.bidSize}</td>' : ''}
             </tr>
           </tbody>
         </table>
