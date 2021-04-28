@@ -26,43 +26,45 @@
     </form>
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
-  <div class="container">
+  <div class="container" id="container">
     <h1 class="centered font-weight-bold">STOCK SEARCH</h1>
     <div class="text-center">
       <form class="search-bar form-inline" id="search">
-        <input type="text" class="no-border" required name="stock">
+        <input type="text" class="no-border" required name="stock" id="stock">
         <input type="submit" value="" class="search-icon">
       </form>
     </div>
-    <div id="error"></div>
+    <div id="error" class="error-message"></div>
   </div>
   <script>
+    // define DOM elements
     const errorField = $("#error")[0];
+    const container = $("#container")[0];
+    const stock = $("#stock")[0];
 
     // get CSRF Token
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
 
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
       console.log(status);
       console.log(data);
-      alert("done");
+      alert(stock.val());
     }
     const onError = function (xhr, status, error) {
       errorField.innerText = `
       ${xhr.status}
-      ${xhr.responseText}
-      `;
+      ${xhr.responseText}`;
+      alert(stock.val());
     }
 
     // Set form submit 
     $("#search").submit(function () {
       // clear error message, if any
       errorField.innerHTML = "";
-
       $.ajax({
-        "url": `${location.origin}/stock?ticker=PLACEHOLDER`,
+        "url": `${location.origin}/stock?ticker=${stock.value}`,
         "method": "GET",
         "success": onSuccess,
         "error": onError,
