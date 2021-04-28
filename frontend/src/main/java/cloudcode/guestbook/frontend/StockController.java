@@ -30,18 +30,7 @@ public class StockController {
     System.out.println("Det: " + auth.getDetails());
 
     try {
-      RestTemplate template = new RestTemplate();
-      URI url = new URI(baseURL + ticker + "/prices?token=" + token);
-
-      ResponseEntity<StockDetailsList> response = template.getForEntity(
-        url,
-        StockDetailsList.class
-      );
-      StockDetailsList list = response.getBody();
-      if (list.isEmpty()) {
-        throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-      }
-      StockDetails details = list.get(0);
+      StockDetails details = fetchDetails(ticker);
       return ResponseEntity.ok(details);
     } catch (HttpClientErrorException e) {
       int status_code = e.getRawStatusCode();
@@ -57,5 +46,38 @@ public class StockController {
           .body("Encountered an error");
       }
     }
+  }
+
+  // Fetches price information about the given ticker from the Tiingo API
+  private StockDetails fetchDetails(String ticker)
+    throws URISyntaxException, HttpClientErrorException {
+    RestTemplate template = new RestTemplate();
+    URI url = new URI(baseURL + ticker + "/prices?token=" + token);
+
+    ResponseEntity<StockDetailsList> response = template.getForEntity(
+      url,
+      StockDetailsList.class
+    );
+    StockDetailsList list = response.getBody();
+
+    if (list.isEmpty()) {
+      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+    }
+    StockDetails details = list.get(0);
+    return details;
+  }
+
+  // Fetches metadata about the given ticker from the Tiingo API
+  private StockMeta fetchMeta(String ticker)
+    throws URISyntaxException, HttpClientErrorException {
+    RestTemplate template = new RestTemplate();
+    URI url = new URI(baseURL + ticker + "?token=" + token);
+
+    ResponseEntity<StockMeta> response = template.getForEntity(
+      url,
+      StockMeta.class
+    );
+    StockMeta meta = response.getBody();
+    return meta;
   }
 }
