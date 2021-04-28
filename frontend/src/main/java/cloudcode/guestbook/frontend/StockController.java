@@ -103,11 +103,15 @@ public class StockController {
     RestTemplate template = new RestTemplate();
     URI url = new URI(baseURL + "/iex/" + ticker + "?token=" + token);
 
-    ResponseEntity<StockIEX> response = template.getForEntity(
+    ResponseEntity<StockIEXList> response = template.getForEntity(
       url,
-      StockIEX.class
+      StockIEXList.class
     );
-    StockIEX iex = response.getBody();
+    StockIEXList list = response.getBody();
+    if (list.isEmpty()) {
+      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+    }
+    StockIEX iex = list.get(0);
     return iex;
   }
 }
