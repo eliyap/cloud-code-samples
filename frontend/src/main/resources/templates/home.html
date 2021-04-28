@@ -46,7 +46,7 @@
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
   </script>
-  <script>
+  <script sec:authorize="!isAuthenticated()">
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
       container.innerHTML = `
@@ -84,6 +84,14 @@
       </div>
       <p>Start Date: ${data.metadata.startDate}</p>
       <p>${data.metadata.description}</p>
+      `;
+    }
+  </script>
+  <script sec:authorize="isAuthenticated()">
+    // Define AJAX Callbacks
+    const onSuccess = function (data, status, _) {
+      container.innerHTML = `
+      YOU ARE AUTHENTICATED
       `;
     }
   </script>
