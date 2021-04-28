@@ -1,5 +1,7 @@
 package cloudcode.guestbook.frontend;
 
+import java.util.Date;
+
 public class StockIEX {
 
   public String ticker;
@@ -14,6 +16,7 @@ public class StockIEX {
   public Float askSize;
   public Float askPrice;
   public Integer volume;
+  public Date timestamp;
 
   // No Args Constructor for Jackson
   public StockIEX() {}
