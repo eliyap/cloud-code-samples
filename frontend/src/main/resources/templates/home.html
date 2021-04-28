@@ -39,7 +39,7 @@
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     $.ajax({
-      "url": `${location.origin}/stock?stock=PLACEHOLDER`,
+      "url": `${location.origin}/stock?ticker=PLACEHOLDER`,
       "method": "GET",
       "beforeSend": function (xhr, settings) {
         xhr.setRequestHeader(header, token);
