@@ -170,6 +170,20 @@ form.search-bar > * {
 .center-children > * {
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+}
+
+.text-gray {
+    color: gray;
+}
+
+.text-lightgray {
+    color: lightgray;
+}
+
+.horizontal-rule {
+    height: 3px;
+    background-color: var(--brand-color);
 }
 
 @media (min-width: 1200px) {

@@ -52,7 +52,12 @@
       console.log(data);
       container.innerHTML = `
       <div class="center-children">
-        <table>
+        <h1>PLACEHOLDER TICKER</h1>
+        <h2>PLACEHOLDER</h2>
+        <div>PLACEHOLDER STOCK EXCHANGE</div>
+        <div class="font-weight-bold text-gray mt-5">Summary</div>
+        <div class="horizontal-rule mt-3"></div>
+        <table class="mt-5">
           <tbody>
             <tr>
               <td class="col-left">High Price:</td>
@@ -76,7 +81,10 @@
             </tr>
           </tbody>
         </table>
+        <h3 class="mt-5 ">Company's Description</h3>
       </div>
+      <p>Start Date: PLACEHOLDER</p>
+      <p>PLACEHOLDER</p>
       `;
     }
     const onError = function (xhr, status, error) {
