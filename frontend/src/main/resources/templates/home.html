@@ -91,6 +91,8 @@
   <script sec:authorize="isAuthenticated()">
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
+      const change = data.iex.last - data.iex.prevClose;
+      
       container.innerHTML = `
       <div class="row mx-1">
         <h1>
@@ -98,12 +100,15 @@
           <i class="far fa-star"></i>
         </h1>
         <div class="flex-grow-1"></div>
-        <h1 class="font-weight-bold flex-grow-0">${data.metadata.ticker}</h1>
+        <h1 class="font-weight-bold flex-grow-0">${data.iex.last}</h1>
       </div>
       <div class="row mx-1">
         <h2 class="font-weight-bold text-gray flex-grow-0">${data.metadata.name}</h2>
         <div class="flex-grow-1"></div>
-        <h2 class="font-weight-bold flex-grow-0">${data.metadata.ticker}</h2>
+        <h2 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">
+          <i class="fas fa-caret-${(change > 0) ? "up" : "down"}"></i>
+          ${Math.abs(change)}
+        </h2>
       </div>
       <div class="row mx-1">
         <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
@@ -126,23 +131,23 @@
           <tbody>
             <tr>
               <td class="col-left">High Price:</td>
-              <td class="col-right">${data.price.high}</td>
+              <td class="col-right">${data.iex.high}</td>
             </tr>
             <tr>
               <td class="col-left">Low Price:</td>
-              <td class="col-right">${data.price.low}</td>
+              <td class="col-right">${data.iex.low}</td>
             </tr>
             <tr>
               <td class="col-left">Open Price:</td>
-              <td class="col-right">${data.price.open}</td>
+              <td class="col-right">${data.iex.open}</td>
             </tr>
             <tr>
-              <td class="col-left">Close:</td>
-              <td class="col-right">${data.price.close}</td>
+              <td class="col-left">Prev Close:</td>
+              <td class="col-right">${data.iex.prevClose}</td>
             </tr>
             <tr>
               <td class="col-left">Volume:</td>
-              <td class="col-right">${data.price.volume}</td>
+              <td class="col-right">${data.iex.volume}</td>
             </tr>
           </tbody>
         </table>
