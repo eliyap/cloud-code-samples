@@ -45,11 +45,10 @@
     // get CSRF Token
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
-
+  </script>
+  <script>
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
-      console.log(status);
-      console.log(data);
       container.innerHTML = `
       <div class="center-children">
         <h1 class="font-weight-bold">${data.metadata.ticker}</h1>
@@ -87,12 +86,13 @@
       <p>${data.metadata.description}</p>
       `;
     }
+  </script>
+  <script>
     const onError = function (xhr, status, error) {
       errorField.innerText = `
       ${xhr.status}
       ${xhr.responseText}`;
     }
-
     // Set form submit 
     $("#search").submit(function () {
       // clear error message, if any
