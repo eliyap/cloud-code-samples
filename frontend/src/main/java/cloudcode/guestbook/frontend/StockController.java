@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class StockController {
 
-  private static String baseURL = "https://api.tiingo.com/tiingo/daily/";
+  private static String baseURL = "https://api.tiingo.com";
   private static String token = "548557c5bb89f21ff31b725cebc603b73396bb0c";
 
   @GetMapping("/stock")
@@ -31,7 +31,7 @@ public class StockController {
 
     try {
       /**
-       * For some reason, the backend has `isAuthenticated` backwards: 
+       * For some reason, the backend has `isAuthenticated` backwards:
        * anonymous users return True, authenticated ones return False.
        * Just roll with it.
        */
@@ -63,7 +63,9 @@ public class StockController {
   private StockDetails fetchDetails(String ticker)
     throws URISyntaxException, HttpClientErrorException {
     RestTemplate template = new RestTemplate();
-    URI url = new URI(baseURL + ticker + "/prices?token=" + token);
+    URI url = new URI(
+      baseURL + "/tiingo/daily/" + ticker + "/prices?token=" + token
+    );
 
     ResponseEntity<StockDetailsList> response = template.getForEntity(
       url,
@@ -82,7 +84,7 @@ public class StockController {
   private StockMeta fetchMeta(String ticker)
     throws URISyntaxException, HttpClientErrorException {
     RestTemplate template = new RestTemplate();
-    URI url = new URI(baseURL + ticker + "?token=" + token);
+    URI url = new URI(baseURL + "/tiingo/daily/" + ticker + "?token=" + token);
 
     ResponseEntity<StockMeta> response = template.getForEntity(
       url,
@@ -90,5 +92,19 @@ public class StockController {
     );
     StockMeta meta = response.getBody();
     return meta;
+  }
+
+  // Fetches IEX for the given ticker from the Tiingo API
+  private StockIEX fetchIEX(String ticker)
+    throws URISyntaxException, HttpClientErrorException {
+    RestTemplate template = new RestTemplate();
+    URI url = new URI(baseURL + "/iex/" + ticker + "?token=" + token);
+
+    ResponseEntity<StockIEX> response = template.getForEntity(
+      url,
+      StockIEX.class
+    );
+    StockIEX iex = response.getBody();
+    return iex;
   }
 }
