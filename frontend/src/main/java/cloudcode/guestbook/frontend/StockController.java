@@ -31,7 +31,9 @@ public class StockController {
 
     try {
       StockDetails details = fetchDetails(ticker);
-      return ResponseEntity.ok(details);
+      StockMeta meta = fetchMeta(ticker);
+      StockInfo info = new StockInfo(details, meta);
+      return ResponseEntity.ok(info);
     } catch (HttpClientErrorException e) {
       int status_code = e.getRawStatusCode();
       if (status_code == 404) {
