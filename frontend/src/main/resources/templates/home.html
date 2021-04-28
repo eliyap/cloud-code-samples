@@ -14,6 +14,10 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/f030087652.js" crossorigin="anonymous"></script>
+  <script>
+    // define a global variable indicating whether stock is Favorited.
+    let isFav = false;
+  </script>
 </head>
 
 <body>
@@ -42,7 +46,7 @@
     const errorField = $("#error")[0];
     const container = $("#container")[0];
     const stock = $("#stock")[0];
-
+    
     // get CSRF Token
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
@@ -91,7 +95,17 @@
   <script sec:authorize="isAuthenticated()">
     // Define Star Button Press
     const fav = function(ticker){
-      alert(ticker);
+      isFav = !isFav;
+      if (isFav) {
+        $("#fav").removeClass("far");
+        $("#fav").addClass("fas");
+        $("#fav").addClass("yellow");
+      } else {
+        $("#fav").removeClass("fas");
+        $("#fav").removeClass("yellow");
+        $("#fav").addClass("far");
+      }
+      alert(`ticker ${isFav}`);
     };
   </script>
   <script sec:authorize="isAuthenticated()">
@@ -116,7 +130,7 @@
       <div class="row mx-1">
         <h1>
           <span class="font-weight-bold flex-grow-0">${data.metadata.ticker}</span>
-          <i class="far fa-star" onClick="fav('${data.metadata.ticker}')"></i>
+          <i class="far fa-star" onClick="fav('${data.metadata.ticker}')" id="fav"></i>
         </h1>
         <div class="flex-grow-1"></div>
         <h1 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">${data.iex.last}</h1>

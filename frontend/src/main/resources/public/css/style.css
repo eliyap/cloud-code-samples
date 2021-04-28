@@ -190,6 +190,10 @@ form.search-bar > * {
   background-color: var(--brand-color);
 }
 
+.yellow {
+    color: var(--yellow);
+}
+
 #buy {
   background-color: rgb(84,164,80);
   color: white;
