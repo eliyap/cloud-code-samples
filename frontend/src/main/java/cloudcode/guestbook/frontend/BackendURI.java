@@ -36,4 +36,9 @@ public class BackendURI {
     "http://%s/checkfavorite",
     System.getenv("GUESTBOOK_API_ADDR")
   );
+  
+  public static String TRADE = String.format(
+    "http://%s/trade",
+    System.getenv("GUESTBOOK_API_ADDR")
+  );
 }
