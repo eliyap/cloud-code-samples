@@ -96,6 +96,8 @@
     // Define Star Button Press
     const fav = function(ticker){
       isFav = !isFav;
+      
+      // set star style
       if (isFav) {
         $("#fav").removeClass("far");
         $("#fav").addClass("fas");
@@ -105,7 +107,11 @@
         $("#fav").removeClass("yellow");
         $("#fav").addClass("far");
       }
-      alert(`ticker ${isFav}`);
+      
+      $.ajax({
+        "method": "POST",
+        "url": `${location.origin}/favorite?ticker=${ticker}&favorite=${isFav}`,
+      });
     };
   </script>
   <script sec:authorize="isAuthenticated()">
