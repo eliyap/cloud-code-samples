@@ -211,10 +211,10 @@
       <p>Start Date: ${data.metadata.startDate}</p>
       <p>${data.metadata.description}</p>
       `;
+      isFav = data.iex.isFavorite;
+      updateStar(isFav);
     }
 
-    isFav = data.iex.isFavorite;
-    updateStar(isFav);
   </script>
   <script>
     const onError = function (xhr, status, error) {
