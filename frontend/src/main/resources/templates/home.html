@@ -25,7 +25,7 @@
     <a class="navbar-brand mr-auto" href="/">SalStocks</a>
     <a class="nav-link active" href="/">Home/Search</a>
     <a class="nav-link" href="/favorites" sec:authorize="isAuthenticated()">Favorites</a>
-    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Portfolio</a>
+    <a class="nav-link" href="/portfolio" sec:authorize="isAuthenticated()">Portfolio</a>
     <form class="nav-link" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
       <input type="submit" value="Logout" />
     </form>
