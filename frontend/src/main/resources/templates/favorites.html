@@ -26,8 +26,12 @@
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
   <div class="container">
+    <h1 class="font-weight-bold">My Favorites</h1>
     <div class="row" th:each="s : ${stocks}">
-      <div th:text="${s.ticker}"></div>
+      <div class="stock-card">
+        <h2 th:text="${s.iex.ticker}" class="font-weight-bold"></h2>
+        <div th:text="${s.meta.name}" class="font-weight-bold"></div>
+      </div>
     </div>
   </div>
 </body>

@@ -47,11 +47,14 @@ public class FavoriteController {
       .toString();
     URI url = new URI(BackendURI.FAVORITES + "?email=" + email);
     TickerList list = template.getForEntity(url, TickerList.class).getBody();
-    ArrayList<StockIEX> iexList = new ArrayList<StockIEX>();
+    ArrayList<StockInfo> infoList = new ArrayList<StockInfo>();
     for (String ticker : list) {
-      iexList.add(StockFetch.fetchIEX(ticker));
+      StockIEX iex = StockFetch.fetchIEX(ticker);
+      StockMeta meta = StockFetch.fetchMeta(ticker);
+      StockInfo info = new StockInfo(iex, meta);
+      infoList.add(info);
     }
-    model.addAttribute("stocks", iexList);
+    model.addAttribute("stocks", infoList);
     return "favorites";
   }
 }
