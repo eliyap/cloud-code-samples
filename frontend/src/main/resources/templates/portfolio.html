@@ -30,7 +30,15 @@
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
   <div class="container">
-    <h1 class="font-weight-bold mx-3">My Favorites</h1>
+    <h1 class="font-weight-bold mx-3">My Portfolio</h1>
+    <h3 class="font-weight-bold mr-5">
+      Cash Balance:
+      <span>PLACEHPOLDER</span>
+    </h3>
+    <h3 class="font-weight-bold mr-5">
+      Total Account Value:
+      <span>PLACEHPOLDER</span>
+    </h3>
     <div class="stock-card mx-3 mb-3 p-3" th:each="s : ${stocks}" th:id="${s.iex.ticker}">
       <i class="fas fa-times remove-btn" th:attr="onclick=|unfav('${s.iex.ticker}')|"></i>
       <div class="row mx-3">
@@ -46,6 +54,13 @@
           <span th:text="${s.iex.changeStr}"></span>
         </h3>
       </div>
+      <form>
+        <label>Quantity: </label>
+        <input type="text" required name="quantity" id="quantity">
+        <input type="radio" name="action" value="buy" id="buy">
+        <input type="radio" name="action" value="sell" id="sell">
+        <input type="submit" value="submit">
+      </form>
     </div>
   </div>
   <script>
@@ -71,7 +86,7 @@
   <script>
     // implement required alert message
     const containerChildren = $(".container")[0].childElementCount;
-    if(containerChildren == 1) {
+    if (containerChildren == 1) {
       alert("Currently you don't have any stock in your favorites.");
     }
   </script>
