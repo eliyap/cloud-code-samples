@@ -90,10 +90,7 @@ public class FavoriteController {
    * @return
    */
   @GetMapping("/favorites")
-  final ResponseEntity<?> favorites(
-    @RequestParam String email,
-    @RequestParam String ticker
-  ) {
+  final ResponseEntity<?> favorites(@RequestParam String email) {
     GoogleUser googleUser = googleUserRepository.findByEmail(email);
     User user = userRepository.findByEmail(email);
     if (googleUser != null) {

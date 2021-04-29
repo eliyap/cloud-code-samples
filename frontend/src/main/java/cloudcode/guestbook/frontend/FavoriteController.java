@@ -40,7 +40,12 @@ public class FavoriteController {
   @GetMapping("/favorites")
   final String favorites(Model model) throws URISyntaxException {
     RestTemplate template = new RestTemplate();
-    URI url = new URI(BackendURI.FAVORITES);
+    String email = SecurityContextHolder
+      .getContext()
+      .getAuthentication()
+      .getPrincipal()
+      .toString();
+    URI url = new URI(BackendURI.FAVORITES + "?email=" + email);
     TickerList list = template.getForEntity(url, TickerList.class).getBody();
     ArrayList<StockIEX> iexList = new ArrayList<StockIEX>();
     for (String ticker : list) {
