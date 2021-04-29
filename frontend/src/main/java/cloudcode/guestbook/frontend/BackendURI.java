@@ -26,6 +26,12 @@ public class BackendURI {
     "http://%s/favorite",
     System.getenv("GUESTBOOK_API_ADDR")
   );
+  
+  public static String FAVORITES = String.format(
+    "http://%s/favorites",
+    System.getenv("GUESTBOOK_API_ADDR")
+  );
+  
   public static String CHEcK_FAVORITE = String.format(
     "http://%s/checkfavorite",
     System.getenv("GUESTBOOK_API_ADDR")
