@@ -1,5 +1,7 @@
 package cloudcode.guestbook.backend;
 
+import java.util.ArrayList;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,11 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "user")
 public class User {
 
-  @Indexed(
-    unique = true,
-    direction = IndexDirection.DESCENDING,
-    dropDups = true
-  )
+  @Id
   private String email;
 
   @Indexed(
@@ -25,6 +23,8 @@ public class User {
   private String username;
 
   private String password;
+
+  private ArrayList<String> favorites;
 
   public User() {}
 
@@ -56,5 +56,13 @@ public class User {
 
   public final void setPassword(String password) {
     this.password = password;
+  }
+
+  public final ArrayList<String> getFavorites() {
+    return favorites;
+  }
+
+  public final void setFavorites(ArrayList<String> favorites) {
+    this.favorites = favorites;
   }
 }

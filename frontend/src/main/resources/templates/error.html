@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="google-signin-client_id"
+    content="974574715204-4ttrkcsmd7i4ltgmon64klu2a0uocjiu.apps.googleusercontent.com">
+  <title>Error</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+  <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand mr-auto" href="/">SalStocks</a>
+    <a class="nav-link" href="/">Home/Search</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Favorites</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Portfolio</a>
+    <form class="nav-link" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+      <input type="submit" value="Logout" />
+    </form>
+    <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
+  </nav>
+  <div class="container">
+    <h3>ERROR</h3>
+  </div>
+</body>
+
+</html>

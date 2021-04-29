@@ -3,34 +3,238 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Guestbook</title>
+  <title>Salstocks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/f030087652.js" crossorigin="anonymous"></script>
+  <script>
+    // define a global variable indicating whether stock is Favorited.
+    let isFav = false;
+  </script>
 </head>
 
 <body>
   <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand mr-auto" href="/">SalStocks</a>
     <a class="nav-link active" href="/">Home/Search</a>
-    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Favorites</a>
+    <a class="nav-link" href="/favorites" sec:authorize="isAuthenticated()">Favorites</a>
     <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Portfolio</a>
     <form class="nav-link" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
       <input type="submit" value="Logout" />
     </form>
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
-  <div class="container">
+  <div class="container" id="container">
     <h1 class="centered font-weight-bold">STOCK SEARCH</h1>
     <div class="text-center">
-      <form class="search-bar form-inline">
-        <input type="text" class="no-border" required name="stock">
+      <form class="search-bar form-inline" id="search">
+        <input type="text" class="no-border" required name="stock" id="stock" autofocus>
         <input type="submit" value="" class="search-icon">
       </form>
     </div>
+    <div id="error" class="error-message"></div>
   </div>
+  <script>
+    // define DOM elements
+    const errorField = $("#error")[0];
+    const container = $("#container")[0];
+    const stock = $("#stock")[0];
+
+    // get CSRF Token
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+  </script>
+  <script sec:authorize="!isAuthenticated()">
+    // Define AJAX Callbacks
+    const onSuccess = function (data, status, _) {
+      container.innerHTML = `
+      <div class="center-children">
+        <h1 class="font-weight-bold">${data.metadata.ticker}</h1>
+        <h2 class="font-weight-bold text-gray">${data.metadata.name}</h2>
+        <div>${data.metadata.exchangeCode}</div>
+        <div class="font-weight-bold text-gray mt-4">Summary</div>
+        <div class="horizontal-rule mt-3"></div>
+        <table class="mt-5">
+          <tbody>
+            <tr>
+              <td class="col-left">High Price:</td>
+              <td class="col-right">${data.price.high}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Low Price:</td>
+              <td class="col-right">${data.price.low}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Open Price:</td>
+              <td class="col-right">${data.price.open}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Close:</td>
+              <td class="col-right">${data.price.close}</td>
+            </tr>
+            <tr>
+              <td class="col-left">Volume:</td>
+              <td class="col-right">${data.price.volume}</td>
+            </tr>
+          </tbody>
+        </table>
+        <h4 class="mt-5 font-weight-bold">Company's Description</h4>
+      </div>
+      <p>Start Date: ${data.metadata.startDate}</p>
+      <p>${data.metadata.description}</p>
+      `;
+    }
+  </script>
+  <script sec:authorize="isAuthenticated()">
+    const updateStar = function (isFav) {
+      // set star style
+      if (isFav) {
+        $("#fav").removeClass("far");
+        $("#fav").addClass("fas");
+        $("#fav").addClass("yellow");
+      } else {
+        $("#fav").removeClass("fas");
+        $("#fav").removeClass("yellow");
+        $("#fav").addClass("far");
+      }
+    };
+  </script>
+  <script sec:authorize="isAuthenticated()">
+    // Define Star Button Press
+    const fav = function (ticker) {
+      isFav = !isFav;
+
+      // set star style
+      updateStar(isFav);
+
+      $.ajax({
+        "method": "POST",
+        "beforeSend": function (xhr, _) {
+          xhr.setRequestHeader(header, token);
+        },
+        "url": `${location.origin}/favorite?ticker=${ticker}&favorite=${isFav}`,
+      });
+
+      alert(isFav ? "Added to Favorites" : "Removed from Favorites");
+    };
+  </script>
+  <script sec:authorize="isAuthenticated()">
+    // Define AJAX Callbacks
+    const onSuccess = function (data, status, _) {
+
+      // Check whether market was open as of 60s ago
+      const isOpen = (new Date() - data.iex.timestamp) < 60;
+
+      // format timestamp
+      let ts = new Date();
+      ts.setTime(Date.parse(data.iex.timestamp));
+      const HH = String(ts.getHours()).padStart(2, '0');
+      const mm = String(ts.getMinutes()).padStart(2, '0');
+      const SS = String(ts.getSeconds()).padStart(2, '0');
+      const timestamp = `${ts.getFullYear()}-${ts.getMonth() + 1}-${ts.getDate()} ${HH}:${mm}:${SS}`;
+
+      container.innerHTML = `
+      <div class="row mx-1">
+        <h1>
+          <span class="font-weight-bold flex-grow-0">${data.metadata.ticker}</span>
+          <i class="far fa-star" onClick="fav('${data.metadata.ticker}')" id="fav"></i>
+        </h1>
+        <div class="flex-grow-1"></div>
+        <h1 class="font-weight-bold flex-grow-0" style="color: ${data.iex.color}">${data.iex.last}</h1>
+      </div>
+      <div class="row mx-1">
+        <h2 class="font-weight-bold text-gray flex-grow-0">${data.metadata.name}</h2>
+        <div class="flex-grow-1"></div>
+        <h2 class="font-weight-bold flex-grow-0" style="color: ${data.iex.color}">
+          <i class="${data.iex.arrow}"></i>
+          ${data.iex.changeStr}
+        </h2>
+      </div>
+      <div class="row mx-1">
+        <div class="flex-grow-0">${data.metadata.exchangeCode}</div>
+        <div class="flex-grow-1"></div>
+        <div class="flex-grow-0">${timestamp}</div>
+      </div>
+      <form class="mx-1">
+        <label>Quantity: </label>
+        <input type="text" required name="quantity" id="quantity">
+        <br/>
+        <input class="px-4 py-1" type="submit" value="Buy" id="buy">
+      </form>
+      <div class="center-children">
+        <div>
+          <span class="font-weight-bold" style="background-color:${isOpen ? "rgb(219,236,219)" : "rgb(240,216,217)"}">
+            ${isOpen ? "Market Open" : `Market Closed on ${timestamp}`}
+          </span>
+        </div>
+        <div class="font-weight-bold text-gray mt-4">Summary</div>
+        <div class="horizontal-rule mt-3"></div>
+        <table class="mt-5">
+          <tbody>
+            <tr>
+              <td class="col-right">High Price:</td>
+              <td class="col-right">${data.iex.high}</td>
+              ${isOpen ? '<td class="col-right">Mid Price:</td><td class="col-right">${data.iex.mid}</td>' : ''}
+            </tr>
+            <tr>
+              <td class="col-right">Low Price:</td>
+              <td class="col-right">${data.iex.low}</td>
+              ${isOpen ? '<td class="col-right">Ask Price:</td><td class="col-right">${data.iex.askPrice}</td>' : ''}
+            </tr>
+            <tr>
+              <td class="col-right">Open Price:</td>
+              <td class="col-right">${data.iex.open}</td>
+              ${isOpen ? '<td class="col-right">Ask Size:</td><td class="col-right">${data.iex.askSize}</td>' : ''}
+            </tr>
+            <tr>
+              <td class="col-right">Prev Close:</td>
+              <td class="col-right">${data.iex.prevClose}</td>
+              ${isOpen ? '<td class="col-right">Bid Price:</td><td class="col-right">${data.iex.bidPrice}</td>' : ''}
+            </tr>
+            <tr>
+              <td class="col-right">Volume:</td>
+              <td class="col-right">${data.iex.volume}</td>
+              ${isOpen ? '<td class="col-right">Bid Size:</td><td class="col-right">${data.iex.bidSize}</td>' : ''}
+            </tr>
+          </tbody>
+        </table>
+        <h4 class="mt-5 font-weight-bold">Company's Description</h4>
+      </div>
+      <p>Start Date: ${data.metadata.startDate}</p>
+      <p>${data.metadata.description}</p>
+      `;
+      isFav = data.iex.isFavorite;
+      updateStar(isFav);
+    }
+
+  </script>
+  <script>
+    const onError = function (xhr, status, error) {
+      errorField.innerText = `
+      ${xhr.status}
+      ${xhr.responseText}`;
+    }
+    // Set form submit 
+    $("#search").submit(function () {
+      // clear error message, if any
+      errorField.innerHTML = "";
+      $.ajax({
+        "url": `${location.origin}/stock?ticker=${stock.value}`,
+        "method": "GET",
+        "success": onSuccess,
+        "error": onError,
+      });
+      // disable form submit action
+      return false;
+    });
+  </script>
 </body>
 
 </html>

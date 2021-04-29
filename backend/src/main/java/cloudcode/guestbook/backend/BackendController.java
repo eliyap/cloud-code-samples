@@ -1,12 +1,11 @@
 package cloudcode.guestbook.backend;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +21,9 @@ public class BackendController {
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   private static final JacksonFactory jacksonFactory = new JacksonFactory();
   private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
   private static String CLIENT_ID =
@@ -35,9 +37,15 @@ public class BackendController {
 
   @PostMapping("/googlesignup")
   public final UserResponse googleSignup(@RequestBody GoogleUser googleUser) {
+    // Prevent ambiguous email address lookup
+    if (userRepository.findByEmail(googleUser.getEmail()) != null) {
+      return new UserResponse(false, "Email already registered");
+    }
+
     // save any new emails to database
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
+      googleUser.setFavorites(new ArrayList<String>());
       googleUserRepository.save(googleUser);
     }
     return new UserResponse(true, null);

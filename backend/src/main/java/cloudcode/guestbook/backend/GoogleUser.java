@@ -1,20 +1,18 @@
 package cloudcode.guestbook.backend;
 
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
+import java.util.ArrayList;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "googleuser")
 public class GoogleUser {
 
-  @Indexed(
-    unique = true,
-    direction = IndexDirection.DESCENDING,
-    dropDups = true
-  )
+  @Id
   private String email;
 
   private String idToken;
+
+  private ArrayList<String> favorites;
 
   public GoogleUser() {}
 
@@ -37,5 +35,13 @@ public class GoogleUser {
 
   public final void setIdToken(String idToken) {
     this.idToken = idToken;
+  }
+
+  public final ArrayList<String> getFavorites() {
+    return favorites;
+  }
+
+  public final void setFavorites(ArrayList<String> favorites) {
+    this.favorites = favorites;
   }
 }
