@@ -21,4 +21,9 @@ public class BackendURI {
     "http://%s/login",
     System.getenv("GUESTBOOK_API_ADDR")
   );
+  
+  public static String FAVORITE = String.format(
+    "http://%s/favorite",
+    System.getenv("GUESTBOOK_API_ADDR")
+  );
 }
