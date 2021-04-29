@@ -46,7 +46,7 @@
     const errorField = $("#error")[0];
     const container = $("#container")[0];
     const stock = $("#stock")[0];
-    
+
     // get CSRF Token
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
@@ -94,9 +94,9 @@
   </script>
   <script sec:authorize="isAuthenticated()">
     // Define Star Button Press
-    const fav = function(ticker){
+    const fav = function (ticker) {
       isFav = !isFav;
-      
+
       // set star style
       if (isFav) {
         $("#fav").removeClass("far");
@@ -107,9 +107,12 @@
         $("#fav").removeClass("yellow");
         $("#fav").addClass("far");
       }
-      
+
       $.ajax({
         "method": "POST",
+        "beforeSend": function (xhr, _) {
+          xhr.setRequestHeader(header, token);
+        },
         "url": `${location.origin}/favorite?ticker=${ticker}&favorite=${isFav}`,
       });
     };
