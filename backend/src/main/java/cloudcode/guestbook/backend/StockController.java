@@ -2,6 +2,7 @@ package cloudcode.guestbook.backend;
 
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +29,42 @@ public class StockController {
     @RequestParam String action,
     @RequestParam Integer quantity,
     @RequestParam String ticker,
-    @RequestParam String email
+    @RequestParam String email,
+    @RequestParam Integer price
   ) {
     GoogleUser googleUser = googleUserRepository.findByEmail(email);
     User user = userRepository.findByEmail(email);
 
-    if (googleUser != null) {
-      // TODO
-    } else if (user != null) {
-      // TODO
+    Integer dxn = (action.toUpperCase() == "BUY") ? -1 : +1;
+    Integer cost = price * quantity * dxn;
 
+    if (googleUser != null) {
+      Integer newBalance = googleUser.getBalance() + cost;
+      if (newBalance < 0) {
+        return ResponseEntity
+          .status(HttpStatus.PAYMENT_REQUIRED)
+          .body("Insufficient Balance");
+      } else {
+        googleUser.setBalance(newBalance);
+        googleUserRepository.save(googleUser);
+        return ResponseEntity.ok("Done");
+      }
+    } else if (user != null) {
+      Integer newBalance = user.getBalance() + cost;
+      if (newBalance < 0) {
+        return ResponseEntity
+          .status(HttpStatus.PAYMENT_REQUIRED)
+          .body("Insufficient Balance");
+      } else {
+        user.setBalance(newBalance);
+        userRepository.save(user);
+        return ResponseEntity.ok("Done");
+      }
     } else {
       System.err.println("No User Found with Email: " + email);
+      return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body("No User Found with Email");
     }
-    
-    // TODO
-    return ResponseEntity.ok("");
   }
 }
