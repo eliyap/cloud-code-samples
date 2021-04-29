@@ -68,6 +68,13 @@
       $(`#${ticker}`).remove();
     };
   </script>
+  <script>
+    // implement required alert message
+    const containerChildren = $(".container")[0].childElementCount;
+    if(containerChildren == 1) {
+      alert("Currently you don't have any stock in your favorites.");
+    }
+  </script>
 </body>
 
 </html>
