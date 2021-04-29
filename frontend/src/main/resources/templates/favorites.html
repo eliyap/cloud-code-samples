@@ -64,7 +64,8 @@
         "url": `${location.origin}/favorite?ticker=${ticker}&favorite=false`,
       });
 
-      // alert(isFav ? "Added to Favorites" : "Removed from Favorites");
+      // Remove the element from the list
+      $(`#{ticker}`).remove();
     };
   </script>
 </body>
