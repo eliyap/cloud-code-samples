@@ -14,6 +14,9 @@ public class GoogleUser {
 
   private ArrayList<String> favorites;
 
+  // User's paper money, in cents
+  private Integer balance;
+
   public GoogleUser() {}
 
   public GoogleUser(String email, String idToken) {
@@ -43,5 +46,13 @@ public class GoogleUser {
 
   public final void setFavorites(ArrayList<String> favorites) {
     this.favorites = favorites;
+  }
+
+  public final Integer getBalance() {
+    return balance;
+  }
+
+  public final void setBalance(Integer balance) {
+    this.balance = balance;
   }
 }

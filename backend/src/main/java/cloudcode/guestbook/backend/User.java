@@ -24,6 +24,9 @@ public class User {
 
   private String password;
 
+  // User's paper money, in cents
+  private Integer balance;
+
   private ArrayList<String> favorites;
 
   public User() {}
@@ -64,5 +67,13 @@ public class User {
 
   public final void setFavorites(ArrayList<String> favorites) {
     this.favorites = favorites;
+  }
+
+  public final Integer getBalance() {
+    return balance;
+  }
+
+  public final void setBalance(Integer balance) {
+    this.balance = balance;
   }
 }
