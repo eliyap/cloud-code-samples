@@ -128,9 +128,6 @@
   <script sec:authorize="isAuthenticated()">
     // Define AJAX Callbacks
     const onSuccess = function (data, status, _) {
-      // Rounding to 2 DP: https://stackoverflow.com/a/11832950/12395667
-      const change = Math.round(((data.iex.last - data.iex.prevClose) + Number.EPSILON) * 100) / 100;
-      const percentChange = Math.round(((change / data.iex.prevClose) + Number.EPSILON) * 100 * 100) / 100;
 
       // Check whether market was open as of 60s ago
       const isOpen = (new Date() - data.iex.timestamp) < 60;
@@ -150,14 +147,14 @@
           <i class="far fa-star" onClick="fav('${data.metadata.ticker}')" id="fav"></i>
         </h1>
         <div class="flex-grow-1"></div>
-        <h1 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">${data.iex.last}</h1>
+        <h1 class="font-weight-bold flex-grow-0" style="color: ${data.iex.color}">${data.iex.last}</h1>
       </div>
       <div class="row mx-1">
         <h2 class="font-weight-bold text-gray flex-grow-0">${data.metadata.name}</h2>
         <div class="flex-grow-1"></div>
-        <h2 class="font-weight-bold flex-grow-0" style="color: ${(change > 0) ? "green" : "red"}">
-          <i class="fas fa-caret-${(change > 0) ? "up" : "down"}"></i>
-          ${change} (${percentChange})%
+        <h2 class="font-weight-bold flex-grow-0" style="color: ${data.iex.color}">
+          <i class="${data.iex.arrow}"></i>
+          ${data.iex.changeStr}
         </h2>
       </div>
       <div class="row mx-1">
