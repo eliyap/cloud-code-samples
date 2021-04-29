@@ -25,6 +25,11 @@ public class StockController {
     Authentication auth = SecurityContextHolder
       .getContext()
       .getAuthentication();
+    String email = SecurityContextHolder
+      .getContext()
+      .getAuthentication()
+      .getPrincipal()
+      .toString();
     System.out.println("Is Authenticated: " + auth.isAuthenticated());
     System.out.println("Auth: " + auth.getPrincipal());
     System.out.println("Det: " + auth.getDetails());
@@ -43,6 +48,8 @@ public class StockController {
       } else {
         StockIEX iex = fetchIEX(ticker);
         StockMeta meta = fetchMeta(ticker);
+        Boolean isFavorite = checkFavorite(email, ticker);
+        iex.isFavorite = isFavorite;
         StockInfo info = new StockInfo(iex, meta);
         return ResponseEntity.ok(info);
       }
@@ -113,5 +120,15 @@ public class StockController {
     }
     StockIEX iex = list.get(0);
     return iex;
+  }
+
+  private Boolean checkFavorite(String email, String ticker)
+    throws URISyntaxException, HttpClientErrorException {
+    RestTemplate template = new RestTemplate();
+    URI url = new URI(
+      BackendURI.FAVORITES + "?email=" + email + "&ticker=" + ticker
+    );
+    ResponseEntity<Boolean> reponse = template.getForEntity(url, Boolean.class);
+    return reponse.getBody();
   }
 }
