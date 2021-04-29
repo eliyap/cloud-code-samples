@@ -7,10 +7,14 @@
     content="974574715204-4ttrkcsmd7i4ltgmon64klu2a0uocjiu.apps.googleusercontent.com">
   <title>Favorites</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
   <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
   <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/f030087652.js" crossorigin="anonymous"></script>
 </head>
 
@@ -26,14 +30,40 @@
     <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
   </nav>
   <div class="container">
-    <h1 class="font-weight-bold">My Favorites</h1>
-    <div class="row" th:each="s : ${stocks}">
-      <div class="stock-card">
-        <h2 th:text="${s.iex.ticker}" class="font-weight-bold"></h2>
-        <div th:text="${s.metadata.name}" class="font-weight-bold"></div>
+    <h1 class="font-weight-bold mx-3">My Favorites</h1>
+    <div class="stock-card mx-3 mb-3 p-3" th:each="s : ${stocks}" th:id="${s.iex.ticker}">
+      <i class="fas fa-times remove-btn" th:attr="onclick=|unfav('${s.iex.ticker}')|"></i>
+      <div class="row">
+        <h2 th:text="${s.iex.ticker}" class="font-weight-bold flex-grow-0"></h2>
+        <div class="flex-grow-1"></div>
+        <h2 th:text="${s.iex.ticker}" class="font-weight-bold flex-grow-0"></h2>
+      </div>
+      <div class="row">
+        <div th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></div>
+        <div class="flex-grow-1"></div>
+        <div th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></div>
       </div>
     </div>
   </div>
+  <script>
+    // get CSRF Token
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+  </script>
+  <script>
+    // Remove a ticker from the Favorites list
+    const unfav = function (ticker) {
+      $.ajax({
+        "method": "POST",
+        "beforeSend": function (xhr, _) {
+          xhr.setRequestHeader(header, token);
+        },
+        "url": `${location.origin}/favorite?ticker=${ticker}&favorite=false`,
+      });
+
+      alert(isFav ? "Added to Favorites" : "Removed from Favorites");
+    };
+  </script>
 </body>
 
 </html>
