@@ -92,6 +92,22 @@
       `;
     }
   </script>
+  <script>
+    const trade = function(){
+      const quantity = $("#quantity").val();
+      const ticker = $("#ticker").val();
+
+      $.ajax({
+        "method": "POST",
+        "beforeSend": function (xhr, _) {
+          xhr.setRequestHeader(header, token);
+        },
+        "url": `${location.origin}/trade?ticker=${ticker}&quantity=${quantity}&action=buy`,
+      });
+
+      return false;
+    }
+  </script>
   <script sec:authorize="isAuthenticated()">
     const updateStar = function (isFav) {
       // set star style
@@ -162,7 +178,7 @@
         <div class="flex-grow-1"></div>
         <div class="flex-grow-0">${timestamp}</div>
       </div>
-      <form class="mx-1" onsubmit="trade()">
+      <form class="mx-1" id="trade">
         <label>Quantity: </label>
         <input type="text" required name="quantity" id="quantity">
         <input type="text" required name="ticker" id="ticker" value="${data.metadata.ticker}" style="visibility: hidden">
@@ -213,6 +229,8 @@
       `;
       isFav = data.iex.isFavorite;
       updateStar(isFav);
+
+      $("#trade").submit(trade);
     }
 
   </script>
@@ -235,20 +253,6 @@
       // disable form submit action
       return false;
     });
-  </script>
-  <script>
-    const trade = function(){
-      const quantity = $("#quantity").value;
-      const ticker = $("#ticker").value;
-
-      $.ajax({
-        "method": "POST",
-        "beforeSend": function (xhr, _) {
-          xhr.setRequestHeader(header, token);
-        },
-        "url": `${location.origin}/trade?ticker=${ticker}&quantity=${quantity}&action=buy`,
-      })
-    }
   </script>
 </body>
 
