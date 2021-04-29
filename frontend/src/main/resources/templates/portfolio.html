@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="google-signin-client_id"
+    content="974574715204-4ttrkcsmd7i4ltgmon64klu2a0uocjiu.apps.googleusercontent.com">
+  <title>Favorites</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
+  <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+  <link rel="icon" th:href="@{/favicon.png}" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/f030087652.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand mr-auto" href="/">SalStocks</a>
+    <a class="nav-link" href="/">Home/Search</a>
+    <a class="nav-link active" href="/favorites" sec:authorize="isAuthenticated()">Favorites</a>
+    <a class="nav-link" href="#" sec:authorize="isAuthenticated()">Portfolio</a>
+    <form class="nav-link" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+      <input type="submit" value="Logout" />
+    </form>
+    <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">Login/Sign Up</a>
+  </nav>
+  <div class="container">
+    <h1 class="font-weight-bold mx-3">My Favorites</h1>
+    <div class="stock-card mx-3 mb-3 p-3" th:each="s : ${stocks}" th:id="${s.iex.ticker}">
+      <i class="fas fa-times remove-btn" th:attr="onclick=|unfav('${s.iex.ticker}')|"></i>
+      <div class="row mx-3">
+        <h2 th:text="${s.iex.ticker}" class="font-weight-bold flex-grow-0"></h2>
+        <div class="flex-grow-1"></div>
+        <h2 th:text="${s.iex.last}" class="font-weight-bold flex-grow-0" th:attr="style=|color:${s.iex.color};|"></h2>
+      </div>
+      <div class="row mx-3">
+        <h3 th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></h3>
+        <div class="flex-grow-1"></div>
+        <h3 class="font-weight-bold flex-grow-0" th:attr="style=|color:${s.iex.color};|">
+          <i th:class="${s.iex.arrow}"></i>
+          <span th:text="${s.iex.changeStr}"></span>
+        </h3>
+      </div>
+    </div>
+  </div>
+  <script>
+    // get CSRF Token
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+  </script>
+  <script>
+    // Remove a ticker from the Favorites list
+    const unfav = function (ticker) {
+      $.ajax({
+        "method": "POST",
+        "beforeSend": function (xhr, _) {
+          xhr.setRequestHeader(header, token);
+        },
+        "url": `${location.origin}/favorite?ticker=${ticker}&favorite=false`,
+      });
+
+      // Remove the element from the list
+      $(`#${ticker}`).remove();
+    };
+  </script>
+  <script>
+    // implement required alert message
+    const containerChildren = $(".container")[0].childElementCount;
+    if(containerChildren == 1) {
+      alert("Currently you don't have any stock in your favorites.");
+    }
+  </script>
+</body>
+
+</html>
