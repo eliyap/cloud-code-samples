@@ -121,6 +121,8 @@
         },
         "url": `${location.origin}/favorite?ticker=${ticker}&favorite=${isFav}`,
       });
+
+      alert(isFav ? "Added to Favorites" : "Removed from Favorites");
     };
   </script>
   <script sec:authorize="isAuthenticated()">
