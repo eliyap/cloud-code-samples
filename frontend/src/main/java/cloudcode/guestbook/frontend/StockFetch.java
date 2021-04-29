@@ -73,7 +73,7 @@ public class StockFetch {
     throws URISyntaxException, HttpClientErrorException {
     RestTemplate template = new RestTemplate();
     URI url = new URI(
-      BackendURI.CHEcK_FAVORITE + "?email=" + email + "&ticker=" + ticker
+      BackendURI.CHECK_FAVORITE + "?email=" + email + "&ticker=" + ticker
     );
     ResponseEntity<Boolean> reponse = template.getForEntity(url, Boolean.class);
     return reponse.getBody();

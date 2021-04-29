@@ -32,7 +32,7 @@ public class BackendURI {
     System.getenv("GUESTBOOK_API_ADDR")
   );
   
-  public static String CHEcK_FAVORITE = String.format(
+  public static String CHECK_FAVORITE = String.format(
     "http://%s/checkfavorite",
     System.getenv("GUESTBOOK_API_ADDR")
   );
