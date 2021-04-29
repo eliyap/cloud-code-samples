@@ -51,6 +51,10 @@ public class UserController {
       return new UserResponse(false, "Username already registered");
     } else {
       user.setFavorites(new ArrayList<String>());
+      
+      // Paper money of 50k USD
+      user.setBalance(5000000);
+      
       userRepository.save(user);
       return new UserResponse(true, null);
     }

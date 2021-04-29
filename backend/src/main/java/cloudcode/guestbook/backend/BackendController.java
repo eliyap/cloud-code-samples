@@ -46,6 +46,10 @@ public class BackendController {
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
       googleUser.setFavorites(new ArrayList<String>());
+
+      // Paper money of 50k USD
+      googleUser.setBalance(5000000);
+
       googleUserRepository.save(googleUser);
     }
     return new UserResponse(true, null);
