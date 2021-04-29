@@ -93,10 +93,7 @@
     }
   </script>
   <script sec:authorize="isAuthenticated()">
-    // Define Star Button Press
-    const fav = function (ticker) {
-      isFav = !isFav;
-
+    const updateStar = function (isFav) {
       // set star style
       if (isFav) {
         $("#fav").removeClass("far");
@@ -107,6 +104,15 @@
         $("#fav").removeClass("yellow");
         $("#fav").addClass("far");
       }
+    };
+  </script>
+  <script sec:authorize="isAuthenticated()">
+    // Define Star Button Press
+    const fav = function (ticker) {
+      isFav = !isFav;
+
+      // set star style
+      updateStar(isFav);
 
       $.ajax({
         "method": "POST",
@@ -206,6 +212,9 @@
       <p>${data.metadata.description}</p>
       `;
     }
+
+    isFav = data.iex.isFavorite;
+    updateStar(isFav);
   </script>
   <script>
     const onError = function (xhr, status, error) {
