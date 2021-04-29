@@ -30,7 +30,7 @@
     <div class="row" th:each="s : ${stocks}">
       <div class="stock-card">
         <h2 th:text="${s.iex.ticker}" class="font-weight-bold"></h2>
-        <div th:text="${s.meta.name}" class="font-weight-bold"></div>
+        <div th:text="${s.metadata.name}" class="font-weight-bold"></div>
       </div>
     </div>
   </div>
