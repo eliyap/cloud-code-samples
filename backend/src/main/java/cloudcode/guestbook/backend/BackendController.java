@@ -5,6 +5,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +45,7 @@ public class BackendController {
     // save any new emails to database
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {
+      googleUser.setFavorites(new ArrayList<String>());
       googleUserRepository.save(googleUser);
     }
     return new UserResponse(true, null);

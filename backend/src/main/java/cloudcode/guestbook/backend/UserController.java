@@ -1,5 +1,6 @@
 package cloudcode.guestbook.backend;
 
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,7 @@ public class UserController {
     } else if (usernameExists) {
       return new UserResponse(false, "Username already registered");
     } else {
+      user.setFavorites(new ArrayList<String>());
       userRepository.save(user);
       return new UserResponse(true, null);
     }
