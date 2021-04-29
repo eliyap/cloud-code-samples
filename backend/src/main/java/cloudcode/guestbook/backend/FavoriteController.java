@@ -50,7 +50,7 @@ public class FavoriteController {
     }
   }
 
-  @GetMapping("/favorites")
+  @GetMapping("/checkfavorite")
   final ResponseEntity<?> favorites(
     @RequestParam String email,
     @RequestParam String ticker

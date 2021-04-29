@@ -11,7 +11,7 @@ public class BackendURI {
     "http://%s/googlesignup",
     System.getenv("GUESTBOOK_API_ADDR")
   );
-  
+
   public static String GOOGLE_VERIFY = String.format(
     "http://%s/googleverify",
     System.getenv("GUESTBOOK_API_ADDR")
@@ -21,13 +21,13 @@ public class BackendURI {
     "http://%s/login",
     System.getenv("GUESTBOOK_API_ADDR")
   );
-  
+
   public static String FAVORITE = String.format(
     "http://%s/favorite",
     System.getenv("GUESTBOOK_API_ADDR")
   );
-  public static String FAVORITES = String.format(
-    "http://%s/favorites",
+  public static String CHEcK_FAVORITE = String.format(
+    "http://%s/checkfavorite",
     System.getenv("GUESTBOOK_API_ADDR")
   );
 }

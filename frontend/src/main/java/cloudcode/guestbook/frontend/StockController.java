@@ -126,7 +126,7 @@ public class StockController {
     throws URISyntaxException, HttpClientErrorException {
     RestTemplate template = new RestTemplate();
     URI url = new URI(
-      BackendURI.FAVORITES + "?email=" + email + "&ticker=" + ticker
+      BackendURI.CHEcK_FAVORITE + "?email=" + email + "&ticker=" + ticker
     );
     ResponseEntity<Boolean> reponse = template.getForEntity(url, Boolean.class);
     return reponse.getBody();
