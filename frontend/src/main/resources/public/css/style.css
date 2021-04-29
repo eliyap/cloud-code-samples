@@ -191,26 +191,27 @@ form.search-bar > * {
 }
 
 .yellow {
-    color: var(--yellow);
+  color: var(--yellow);
 }
 
 .stock-card {
-    border:1px solid lightgray;
-    border-radius: 0.5rem;
-    position: relative;
+  border: 1px solid lightgray;
+  border-radius: 0.5rem;
+  position: relative;
 }
 
 #buy {
-  background-color: rgb(84,164,80);
+  background-color: rgb(84, 164, 80);
   color: white;
   border: none;
   border-radius: 0.25rem;
 }
 
 .remove-btn {
-    position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  color: gray;
 }
 
 @media (min-width: 1200px) {

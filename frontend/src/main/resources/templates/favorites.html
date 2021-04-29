@@ -33,15 +33,18 @@
     <h1 class="font-weight-bold mx-3">My Favorites</h1>
     <div class="stock-card mx-3 mb-3 p-3" th:each="s : ${stocks}" th:id="${s.iex.ticker}">
       <i class="fas fa-times remove-btn" th:attr="onclick=|unfav('${s.iex.ticker}')|"></i>
-      <div class="row">
+      <div class="row mx-3">
         <h2 th:text="${s.iex.ticker}" class="font-weight-bold flex-grow-0"></h2>
         <div class="flex-grow-1"></div>
-        <h2 th:text="${s.iex.ticker}" class="font-weight-bold flex-grow-0"></h2>
+        <h2 th:text="${s.iex.last}" class="font-weight-bold flex-grow-0" th:attr="style=|color:${s.iex.color};|"></h2>
       </div>
-      <div class="row">
-        <div th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></div>
+      <div class="row mx-3">
+        <h3 th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></h3>
         <div class="flex-grow-1"></div>
-        <div th:text="${s.metadata.name}" class="font-weight-bold flex-grow-0"></div>
+        <h3 class="font-weight-bold flex-grow-0" th:attr="style=|color:${s.iex.color};|">
+          <i th:class="${s.iex.arrow}"></i>
+          <span th:text="${s.iex.changeStr}"></span>
+        </h3>
       </div>
     </div>
   </div>
@@ -61,7 +64,7 @@
         "url": `${location.origin}/favorite?ticker=${ticker}&favorite=false`,
       });
 
-      alert(isFav ? "Added to Favorites" : "Removed from Favorites");
+      // alert(isFav ? "Added to Favorites" : "Removed from Favorites");
     };
   </script>
 </body>
