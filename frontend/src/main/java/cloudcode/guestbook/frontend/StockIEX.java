@@ -23,4 +23,19 @@ public class StockIEX {
 
   // No Args Constructor for Jackson
   public StockIEX() {}
+
+  public String changeStr;
+  public Float change;
+  public Float percentChange;
+  public String color;
+  public String arrow;
+
+  public void calculate() {
+    change = (float) Math.round((last - prevClose) * 100) / (float) 100;
+    percentChange =
+      (float) Math.round(change / prevClose * 100 * 100) / (float) 100;
+    changeStr = change + " (" + percentChange + ")%";
+    color = change > 0 ? "green" : "red";
+    arrow = "fas fa-caret-" + (change > 0 ? "up" : "down");
+  }
 }

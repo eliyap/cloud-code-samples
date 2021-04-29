@@ -62,6 +62,10 @@ public class StockFetch {
       throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
     }
     StockIEX iex = list.get(0);
+
+    // do some post processing
+    iex.calculate();
+
     return iex;
   }
 
