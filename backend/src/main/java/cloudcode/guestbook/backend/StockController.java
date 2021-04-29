@@ -41,5 +41,8 @@ public class StockController {
     } else {
       System.err.println("No User Found with Email: " + email);
     }
+    
+    // TODO
+    return ResponseEntity.ok("");
   }
 }

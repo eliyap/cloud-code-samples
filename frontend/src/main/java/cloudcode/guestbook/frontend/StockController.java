@@ -65,7 +65,8 @@ public class StockController {
     @RequestParam String action,
     @RequestParam Integer quantity,
     @RequestParam String ticker
-  ) {
+  )
+    throws URISyntaxException {
     Authentication auth = SecurityContextHolder
       .getContext()
       .getAuthentication();
@@ -93,5 +94,8 @@ public class StockController {
     RestTemplate template = new RestTemplate();
     //TODO
     template.postForEntity(url, null, Object.class);
+
+    // TODO
+    return ResponseEntity.ok("");
   }
 }
