@@ -22,6 +22,9 @@ public class BackendController {
   @Autowired
   private GoogleUserRepository googleUserRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   private static final JacksonFactory jacksonFactory = new JacksonFactory();
   private static final NetHttpTransport NET_HTTP_TRANSPORT = new NetHttpTransport();
   private static String CLIENT_ID =
@@ -35,6 +38,11 @@ public class BackendController {
 
   @PostMapping("/googlesignup")
   public final UserResponse googleSignup(@RequestBody GoogleUser googleUser) {
+    // Prevent ambiguous email address lookup
+    if (userRepository.findByEmail(googleUser.getEmail()) != null) {
+      return new UserResponse(false, "Email already registered");
+    }
+
     // save any new emails to database
     // don't bother updating idToken, it doesn't matter
     if (googleUserRepository.findByEmail(googleUser.getEmail()) == null) {

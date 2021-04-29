@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   @Autowired
+  private GoogleUserRepository googleUserRepository;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private CustomUserDetailsService userService;
-  
+
   @PostMapping("/login")
   public final UserResponse login(@RequestBody User user) {
     User userByName = userRepository.findByUsername(user.getUsername());
@@ -34,10 +37,11 @@ public class UserController {
     }
   }
 
-
   @PostMapping("/signup")
   public final UserResponse signup(@RequestBody User user) {
-    Boolean emailExists = userService.findUserByEmail(user.getEmail()) != null;
+    Boolean emailExists =
+      userService.findUserByEmail(user.getEmail()) != null ||
+      googleUserRepository.findByEmail(user.getEmail()) != null;
     Boolean usernameExists =
       userService.findUserByUsername(user.getUsername()) != null;
     if (emailExists) {
