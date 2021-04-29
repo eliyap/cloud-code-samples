@@ -18,6 +18,9 @@ public class StockIEX {
   public Integer volume;
   public Date timestamp;
 
+  // shimmed variable indicating whether the user has this on their favorites list
+  public boolean isFavorite;
+
   // No Args Constructor for Jackson
   public StockIEX() {}
 }
