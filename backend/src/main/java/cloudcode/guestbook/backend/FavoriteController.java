@@ -32,10 +32,10 @@ public class FavoriteController {
     User user = userRepository.findByEmail(email);
 
     if (googleUser != null) {
-      googleUser.getFavorites().add(ticker);
+      googleUser.getFavorites().add(ticker.toUpperCase());
       googleUserRepository.save(googleUser);
     } else if (user != null) {
-      user.getFavorites().add(ticker);
+      user.getFavorites().add(ticker.toUpperCase());
       userRepository.save(user);
     } else {
       System.err.println("No User Found with Email: " + email);
@@ -50,9 +50,9 @@ public class FavoriteController {
     GoogleUser googleUser = googleUserRepository.findByEmail(email);
     User user = userRepository.findByEmail(email);
     if (googleUser != null) {
-      return ResponseEntity.ok(googleUser.getFavorites().contains(ticker));
+      return ResponseEntity.ok(googleUser.getFavorites().contains(ticker.toUpperCase()));
     } else if (user != null) {
-      return ResponseEntity.ok(user.getFavorites().contains(ticker));
+      return ResponseEntity.ok(user.getFavorites().contains(ticker.toUpperCase()));
     } else {
       System.err.println("(Favorites) No User Found with Email: " + email);
       return ResponseEntity.status(403).body("No User Found with Email");
