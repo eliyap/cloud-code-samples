@@ -16,9 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 public class StockController {
 
-  private static String baseURL = "https://api.tiingo.com";
-  private static String token = "548557c5bb89f21ff31b725cebc603b73396bb0c";
-
+  
   @GetMapping("/stock")
   public final ResponseEntity<?> stock(@RequestParam String ticker)
     throws URISyntaxException {
@@ -41,14 +39,14 @@ public class StockController {
        * Just roll with it.
        */
       if (auth.isAuthenticated()) {
-        StockDetails details = fetchDetails(ticker);
-        StockMeta meta = fetchMeta(ticker);
+        StockDetails details = StockFetch.fetchDetails(ticker);
+        StockMeta meta = StockFetch.fetchMeta(ticker);
         StockInfo info = new StockInfo(details, meta);
         return ResponseEntity.ok(info);
       } else {
-        StockIEX iex = fetchIEX(ticker);
-        StockMeta meta = fetchMeta(ticker);
-        Boolean isFavorite = checkFavorite(email, ticker);
+        StockIEX iex = StockFetch.fetchIEX(ticker);
+        StockMeta meta = StockFetch.fetchMeta(ticker);
+        Boolean isFavorite = StockFetch.checkFavorite(email, ticker);
         iex.isFavorite = isFavorite;
         StockInfo info = new StockInfo(iex, meta);
         return ResponseEntity.ok(info);
@@ -67,68 +65,5 @@ public class StockController {
           .body("Encountered an error");
       }
     }
-  }
-
-  // Fetches price information about the given ticker from the Tiingo API
-  private StockDetails fetchDetails(String ticker)
-    throws URISyntaxException, HttpClientErrorException {
-    RestTemplate template = new RestTemplate();
-    URI url = new URI(
-      baseURL + "/tiingo/daily/" + ticker + "/prices?token=" + token
-    );
-
-    ResponseEntity<StockDetailsList> response = template.getForEntity(
-      url,
-      StockDetailsList.class
-    );
-    StockDetailsList list = response.getBody();
-
-    if (list.isEmpty()) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
-    StockDetails details = list.get(0);
-    return details;
-  }
-
-  // Fetches metadata about the given ticker from the Tiingo API
-  private StockMeta fetchMeta(String ticker)
-    throws URISyntaxException, HttpClientErrorException {
-    RestTemplate template = new RestTemplate();
-    URI url = new URI(baseURL + "/tiingo/daily/" + ticker + "?token=" + token);
-
-    ResponseEntity<StockMeta> response = template.getForEntity(
-      url,
-      StockMeta.class
-    );
-    StockMeta meta = response.getBody();
-    return meta;
-  }
-
-  // Fetches IEX for the given ticker from the Tiingo API
-  private StockIEX fetchIEX(String ticker)
-    throws URISyntaxException, HttpClientErrorException {
-    RestTemplate template = new RestTemplate();
-    URI url = new URI(baseURL + "/iex/" + ticker + "?token=" + token);
-
-    ResponseEntity<StockIEXList> response = template.getForEntity(
-      url,
-      StockIEXList.class
-    );
-    StockIEXList list = response.getBody();
-    if (list.isEmpty()) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
-    StockIEX iex = list.get(0);
-    return iex;
-  }
-
-  private Boolean checkFavorite(String email, String ticker)
-    throws URISyntaxException, HttpClientErrorException {
-    RestTemplate template = new RestTemplate();
-    URI url = new URI(
-      BackendURI.CHEcK_FAVORITE + "?email=" + email + "&ticker=" + ticker
-    );
-    ResponseEntity<Boolean> reponse = template.getForEntity(url, Boolean.class);
-    return reponse.getBody();
   }
 }
