@@ -6,7 +6,7 @@ Elijah Yap
 
 ### Graders
 
-Website can be found [here](http://34.82.101.4/), or at http://34.82.101.4/
+Website can be found [here](http://34.82.101.4/), or at http://35.233.180.171/
 
 Source Code is in Zip.
 

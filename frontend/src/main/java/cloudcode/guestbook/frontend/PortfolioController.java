@@ -22,7 +22,6 @@ public class PortfolioController {
       .toString();
     URI url = new URI(BackendURI.FAVORITES + "?email=" + email);
     
-    model.addAttribute("stocks", infoList);
     return "portfolio";
   }
 }

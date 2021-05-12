@@ -72,6 +72,21 @@ public class StockController {
       .getAuthentication();
     String email = auth.getPrincipal().toString();
 
+    StockIEX iex = StockFetch.fetchIEX(ticker);
+    Integer price = 0;
+    if (action.toUpperCase() == "BUY") {
+      // Buy at Ask Price
+      Float cents = iex.askPrice * 100;
+      price = cents.intValue();
+    } else if (action.toUpperCase() == "SELL") {
+      Float cents = iex.bidPrice * 100;
+      price = cents.intValue();
+    } else {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body("INVALID ACTION");
+    }
+
     URI url = new URI(
       BackendURI.TRADE +
       "?action=" +
@@ -81,8 +96,12 @@ public class StockController {
       "&ticker=" +
       ticker +
       "&email=" +
-      email
+      email +
+      "&price=" +
+      price
     );
+
+    System.out.println("TRADE HIT");
 
     // Reject non-authenticated request
     if (auth.isAuthenticated()) {
